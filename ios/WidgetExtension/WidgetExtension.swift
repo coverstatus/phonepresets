@@ -61,27 +61,28 @@ struct Provider: IntentTimelineProvider {
     var body: some View {
       ZStack {
         Color(red: 23/255, green: 10/255, blue: 45/255).ignoresSafeArea()
-          VStack(spacing: 8) {
-            HStack() {
+          HStack(spacing: 8) {
+            VStack() {
               Image(uiImage: UIImage(named: entry.brightnessIcon)!).resizable()
-                .frame(width: 28.0, height: 28.0).padding(4).background(Color(red: 42/255, green: 32/255, blue: 59/255)).cornerRadius(8)
-              Text(entry.brightnessValue).frame(width: 80, alignment: .leading)
+                .frame(width: 48.0, height: 48.0).padding(4).background(Color(red: 42/255, green: 32/255, blue: 59/255)).cornerRadius(8)
+              Text(entry.brightnessValue)
                           .foregroundColor(.white)
             }
-            HStack() {
+            VStack() {
               Image(uiImage: UIImage(named: entry.volumeIcon)!).resizable()
-                .frame(width: 28.0, height: 28.0).padding(4).background(Color(red: 42/255, green: 32/255, blue: 59/255)).cornerRadius(8)
-              Text(entry.volumeValue).frame(width: 80, alignment: .leading)
+                .frame(width: 48.0, height: 48.0).padding(4).background(Color(red: 42/255, green: 32/255, blue: 59/255)).cornerRadius(8)
+              Text(entry.volumeValue)
                 .foregroundColor(.white)
             }
-            HStack() {
-              Image(uiImage: UIImage(named: entry.silentIcon)!).resizable()
-                .frame(width: 26.0, height: 26.0).padding(5).background(Color(red: 42/255, green: 32/255, blue: 59/255)).cornerRadius(8)
-              Text(entry.silentValue).frame(width: 80, alignment: .leading)
-                .foregroundColor(.white)
-            }
+//            HStack() {
+//              Image(uiImage: UIImage(named: entry.silentIcon)!).resizable()
+//                .frame(width: 26.0, height: 26.0).padding(5).background(Color(red: 42/255, green: 32/255, blue: 59/255)).cornerRadius(8)
+//              Text(entry.silentValue).frame(width: 80, alignment: .leading)
+//                .foregroundColor(.white)
+//            }
           }.scaledToFit()
-      }
+      }.overlay(entry.silentIcon == "s" ? Image(uiImage: UIImage(named: entry.silentIcon)!).resizable().padding(10)
+        .frame(width: 44.0, height: 44.0): nil, alignment: .bottom)
     }
   }
 
