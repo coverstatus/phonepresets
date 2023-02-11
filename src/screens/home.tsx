@@ -22,8 +22,9 @@ import { useSilentSwitch, VolumeManager } from 'react-native-volume-manager';
 import DeviceBrightness from '@adrianso/react-native-device-brightness';
 
 import AppText from '../components/labels/app-text';
-import AppPresetTile from '../components/app-preset-tiles';
 import AppHeaderControls from '../components/app-header-controls';
+import AppPresetListItem from '../components/app-preset-list-item';
+import AppSubtext from '../components/labels/app-subtext';
 const SharedStorage = NativeModules.SharedStorage;
 const group = 'group.phonepresets';
 
@@ -40,11 +41,13 @@ const HomeScreen = ({ navigation }: any) => {
   const [deviceVolume, setDeviceVolume] = useState(0);
   const [brightnessDisplayLabel, setBrightnessDisplayLabel] = useState('100%');
   const [volumeDisplayLabel, setVolumeDisplayLabel] = useState('100%');
-  const [deviceSilent, setDeviceSilent] = useState<boolean>();
+  const [deviceSilent, setDeviceSilent] = useState<boolean>(false);
 
   const bValue = useRef(100);
   const vValue = useRef(100);
   const sValue = useRef(0);
+
+  const [savedPresets, setSavedPresets] = useState([]);
 
   const [widgetData, setWidgetData] = useState({
     brightnessIcon: 'b-76-100',
@@ -90,6 +93,8 @@ const HomeScreen = ({ navigation }: any) => {
     loadCurrentSettings(AppConstants.TYPE_BRIGHTNESS, brightness);
     const volume = (await VolumeManager.getVolume('music')) as number;
     loadCurrentSettings(AppConstants.TYPE_VOLUME, volume);
+    const saved = await CommonService.getPresets();
+    setSavedPresets(saved);
   };
 
   const loadCurrentSettings = (type: string, value: number) => {
@@ -146,76 +151,111 @@ const HomeScreen = ({ navigation }: any) => {
 
   return (
     <AppScreenContainer>
-      {/* <ScreenHeader navigation={navigation} /> */}
+      <ScreenHeader navigation={navigation} />
       <View style={{ flex: 1, flexGrow: 1 }}>
         <AppHeaderControls
           brightness={Number((deviceBrightness * 100).toFixed(0))}
           volume={Number((deviceVolume * 100).toFixed(0))}
           silent={deviceSilent ? true : false}
+          onBrightnessChange={(value: number) => {
+            DeviceBrightness.setBrightnessLevel(value);
+            bValue.current = value;
+            setDeviceBrightness(value);
+            setBrightnessDisplayLabel((value * 100).toFixed(0) + '%');
+            setWidgetData((currentState: any) => {
+              const dataForWidget = {
+                ...currentState,
+                brightnessIcon: 'b' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
+                brightnessValue: (value * 100).toFixed(0) + '%',
+              };
+              return dataForWidget;
+            });
+          }}
+          onVolumeChange={async (value: number) => {
+            await VolumeManager.setVolume(value);
+            vValue.current = value;
+            setDeviceVolume(value);
+            setVolumeDisplayLabel((value * 100).toFixed(0) + '%');
+            setWidgetData((currentState: any) => {
+              const dataForWidget = {
+                ...currentState,
+                volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
+                volumeValue: (value * 100).toFixed(0) + '%',
+              };
+              return dataForWidget;
+            });
+          }}
+          onSave={async () => {
+            await CommonService.addPreset(
+              widgetData.brightnessIcon,
+              widgetData.brightnessValue,
+              widgetData.volumeIcon,
+              widgetData.volumeValue,
+              widgetData.silentIcon,
+              widgetData.silentValue,
+            );
+            console.log(widgetData);
+            const saved = await CommonService.getPresets();
+            setSavedPresets(saved);
+          }}
         />
-        <ScrollView style={{ flex: 1, flexGrow: 1 }}>
-          <View style={{ padding: 16 }}>
-            <View style={{ flexDirection: 'column' }}>
-              <View style={{ flexDirection: 'row' }}>
-                <AppPresetTile label="MAX BRIGHT / MAX VOL" brightness={100} volume={100} style={{ marginRight: 8 }} />
-                <AppPresetTile label="HALF BRIGHT / HALF VOL" brightness={50} volume={50} style={{ marginLeft: 8 }} />
-              </View>
-              <View style={{ flexDirection: 'row' }}>
-                <AppPresetTile label="MAX BRIGHT / HALF VOL" brightness={100} volume={50} style={{ marginRight: 8 }} />
-                <AppPresetTile label="HALF BRIGHT / MAX VOL" brightness={50} volume={100} style={{ marginLeft: 8 }} />
-              </View>
-              <View style={{ flexDirection: 'row' }}>
-                <AppPresetTile label="LOW BRIGHT / MIN VOL" brightness={25} volume={0} style={{ marginRight: 8 }} />
-                <AppPresetTile label="MIN BRIGHT / LOW VOL" brightness={0} volume={25} style={{ marginLeft: 8 }} />
-              </View>
-              <View style={{ flexDirection: 'row' }}>
-                <AppPresetTile label="LOW BRIGHT / LOW VOL" brightness={10} volume={10} style={{ marginRight: 8 }} />
-                <AppPresetTile label="MIN BRIGHT / MIN VOL" brightness={0} volume={0} style={{ marginLeft: 8 }} />
+        {savedPresets?.length ? (
+          <ScrollView style={{ flex: 1, flexGrow: 1 }}>
+            <View style={{ padding: 16 }}>
+              <View style={{ flexDirection: 'column' }}>
+                {savedPresets.map((item: any) => (
+                  <AppPresetListItem
+                    key={item.id}
+                    presetItem={item}
+                    onPress={() => {
+                      console.log(item);
+                    }}
+                  />
+                ))}
               </View>
             </View>
-            <AppButton
-              mode="contained"
-              text="Update Widget"
-              style={{ paddingVertical: 4 }}
-              isHighlighted={false}
-              onPress={() => {
-                sendDataToWidget();
-              }}></AppButton>
+          </ScrollView>
+        ) : (
+          <View style={{ flex: 1, flexGrow: 1, justifyContent: 'center', alignItems: 'center', opacity: 0.8 }}>
+            <AppText>No preset added yet</AppText>
+            <AppSubtext style={{ textAlign: 'center', maxWidth: 280, marginTop: 4 }}>
+              Tap "Save" to add current settings as a preset.
+            </AppSubtext>
           </View>
-        </ScrollView>
+        )}
       </View>
     </AppScreenContainer>
   );
 };
 
-// const ScreenHeader = ({ navigation }: any) => {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   const [state, setState]: any = useContext(AppContext);
+const ScreenHeader = ({ navigation }: any) => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const [state, setState]: any = useContext(AppContext);
 
-//   return (
-//     <View
-//       style={{
-//         flexDirection: 'row',
-//         justifyContent: 'space-between',
-//         alignItems: 'center',
-//         paddingHorizontal: 16,
-//         paddingBottom: 8,
-//         backgroundColor: AppColors.primary,
-//       }}>
-//       {/* <Image source={require('../assets/images/logo.png')} style={{ height: 42, width: 42, marginRight: 8 }} /> */}
-//       <AppHeading style={{ color: AppColors.dark.text }}>Phone Presets</AppHeading>
-//       <View style={{ flexGrow: 1 }} />
-//       <AppIconButton
-//         icon="cog"
-//         iconStyle={{ color: AppColors.dark.text }}
-//         isDarkMode={true}
-//         style={{
-//           flexDirection: 'row',
-//         }}
-//         onPress={() => {}}
-//       />
-//     </View>
-//   );
-// };
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 16,
+        paddingTop: 8,
+        backgroundColor: AppColors.primary,
+      }}>
+      {/* <Image source={require('../assets/images/logo.png')} style={{ height: 42, width: 42, marginRight: 8 }} /> */}
+      <AppHeading style={{ color: AppColors.dark.text, marginLeft: 2 }}>Phone Presets</AppHeading>
+      <View style={{ flexGrow: 1 }} />
+      <AppIconButton
+        icon="cog"
+        iconStyle={{ color: AppColors.dark.text }}
+        isDarkMode={true}
+        style={{
+          flexDirection: 'row',
+        }}
+        onPress={() => {}}
+      />
+    </View>
+  );
+};
 
 export default HomeScreen;

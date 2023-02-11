@@ -8,92 +8,149 @@ import AppIconButton from './buttons/app-icon-button';
 import AppSubtext from './labels/app-subtext';
 import AppText from './labels/app-text';
 import Slider from '@react-native-community/slider';
+import AppButton from './buttons/app-button';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeChange, silent, style }: any) => {
+const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeChange, silent, style, onSave }: any) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <View style={{ flexDirection: 'column', padding: 16, backgroundColor: AppColors.primary }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        {/* <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            borderRadius: 8,
-            marginRight: 8,
-            height: 42,
-            width: 42,
-            padding: 4,
-          }}>
-          <Image source={CommonService.getImage(silent ? 's' : 'r')} style={{ height: 28, width: 28 }} />
-        </View> */}
+    <View
+      style={{
+        flexDirection: 'column',
+        paddingHorizontal: 16,
+        paddingBottom: 8,
+        paddingTop: 8,
+        backgroundColor: AppColors.primary,
+      }}>
+      <View
+        style={{
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 8,
+          paddingBottom: 8,
+        }}>
         <View
           style={{
-            flex: 1,
             flexGrow: 1,
             paddingHorizontal: 16,
-            paddingVertical: 8,
+            paddingVertical: 2,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#2a203b',
-            borderRadius: 8,
-            marginLeft: 8,
-            marginRight: 4,
+            backgroundColor: AppColors.primaryLight,
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
+            marginBottom: 2,
           }}>
           <Image
             source={CommonService.getImage('b' + CommonService.getIconNameSuffix(brightness))}
-            style={{ height: 32, width: 32, marginRight: 8 }}
+            style={{ height: 32, width: 32, marginRight: 8, marginLeft: -4 }}
           />
-          <AppText>{brightness}%</AppText>
+          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{brightness}%</AppText>
+          <Slider
+            style={{ flex: 1 }}
+            value={brightness / 100}
+            minimumTrackTintColor={AppColors.accent}
+            onValueChange={(value: number) => {
+              onBrightnessChange(value);
+            }}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingLeft: 16,
+            }}>
+            <MaterialCommunityIcons
+              name={'brightness-4'}
+              color={isDarkMode ? AppColors.dark.text : 'rgba(255,255,255,0.4)'}
+              size={24}
+            />
+          </View>
         </View>
         <View
           style={{
-            flex: 1,
             flexGrow: 1,
             paddingHorizontal: 16,
-            paddingVertical: 8,
+            paddingVertical: 2,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '#2a203b',
-            borderRadius: 8,
-            marginLeft: 4,
-            marginRight: 8,
+            backgroundColor: AppColors.primaryLight,
+            borderBottomLeftRadius: 8,
+            borderBottomRightRadius: 8,
           }}>
           <Image
             source={CommonService.getImage('v' + CommonService.getIconNameSuffix(volume))}
-            style={{ height: 32, width: 32, marginRight: 8 }}
+            style={{ height: 32, width: 32, marginRight: 8, marginLeft: -4 }}
           />
-          <AppText>{volume}%</AppText>
+          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{volume}%</AppText>
+          <Slider
+            style={{ flex: 1 }}
+            value={volume / 100}
+            minimumTrackTintColor={AppColors.accent}
+            onValueChange={(value: number) => {
+              onVolumeChange(value);
+            }}
+          />
+          {/* <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'flex-start',
+              borderRadius: 8,
+              height: 42,
+              width: 42,
+            }}>
+            {silent && (
+              <View
+                style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  borderRadius: 8,
+                  backgroundColor: AppColors.primaryLight,
+                }}>
+                <Image source={CommonService.getImage(silent ? 's' : 'r')} style={{ height: 24, width: 24 }} />
+              </View>
+            )}
+          </View> */}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingLeft: 16,
+            }}>
+            <MaterialCommunityIcons
+              name={silent ? 'bell-off' : 'bell-ring'}
+              color={silent ? '#e74242' : 'rgba(255,255,255,0.4)'}
+              size={24}
+            />
+          </View>
         </View>
-        {/* <AppIconButton
-          icon="cog"
-          iconStyle={{ color: AppColors.dark.text }}
-          isDarkMode={true}
+        <View
           style={{
+            marginTop: 8,
             flexDirection: 'row',
-            marginLeft: 8,
-          }}
-          onPress={() => {}}
-        /> */}
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Slider
-          style={{ flex: 1 }}
-          value={brightness / 100}
-          onValueChange={(value: number) => {
-            onBrightnessChange(value);
-          }}
-        />
-        <Slider
-          style={{ flex: 1 }}
-          value={volume / 100}
-          onValueChange={(value: number) => {
-            onVolumeChange(value);
-          }}
-        />
+            alignItems: 'center',
+            flexGrow: 1,
+            justifyContent: 'space-between',
+          }}>
+          <View style={{ flexGrow: 1 }}>
+            <AppButton
+              icon="plus-circle"
+              mode="contained"
+              text="Save as preset"
+              style={{ paddingVertical: 2 }}
+              isHighlighted={false}
+              onPress={() => {
+                onSave();
+              }}></AppButton>
+          </View>
+        </View>
       </View>
     </View>
   );

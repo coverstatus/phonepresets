@@ -65,10 +65,6 @@ export const CommonService = {
     var L = 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     return L > 0.179 ? `rgba(0,0,0,${opacity || 1})` : `rgba(255,255,255,${opacity || 1})`;
   },
-  getToken: () => {
-    const data = new Date().toLocaleString('en', { timeZone: 'America/New_York' });
-    return CryptoJS.AES.encrypt(data, AppConstants.ENCRYPTION_KEY).toString();
-  },
   isProduction: () => {
     return !__DEV__;
   },
@@ -100,5 +96,39 @@ export const CommonService = {
       r: require('../assets/images/r.png'),
     };
     return images[key];
+  },
+  getPresets: async () => {
+    const data = await StorageService.getData(AppConstants.STORAGE_KEY_PRESETS);
+    return data?.length ? data : [];
+  },
+  addPreset: async (
+    brightnessIcon: string,
+    brightnessValue: string,
+    volumeIcon: string,
+    volumeValue: string,
+    silentIcon: string,
+    silentValue: string,
+  ) => {
+    let data = await StorageService.getData(AppConstants.STORAGE_KEY_PRESETS);
+    if (!data || !data.length) {
+      data = [];
+    }
+    data.push({
+      id: Date.now(),
+      brightnessIcon,
+      brightnessValue,
+      volumeIcon,
+      volumeValue,
+      silentIcon,
+      silentValue,
+    });
+
+    await StorageService.setData(AppConstants.STORAGE_KEY_PRESETS, data);
+  },
+  removePreset: async (id: number) => {
+    const data = await StorageService.getData(AppConstants.STORAGE_KEY_PRESETS);
+    const index = data.findIndex((x: any) => x.id === id);
+    data.splice(index, 1);
+    await StorageService.setData(AppConstants.STORAGE_KEY_PRESETS, data);
   },
 };
