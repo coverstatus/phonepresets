@@ -8,6 +8,7 @@ import { CommonService } from '../services/common.service';
 import AppSubtext from './labels/app-subtext';
 import AppText from './labels/app-text';
 import { ProgressBar } from 'react-native-paper';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AppPresetListItem = ({
   active = false,
@@ -19,10 +20,14 @@ const AppPresetListItem = ({
   return (
     <Surface
       style={{
-        backgroundColor: isDarkMode ? AppColors.dark.background : AppColors.light.background,
+        backgroundColor: active
+          ? AppColors.primary
+          : isDarkMode
+          ? AppColors.dark.background
+          : AppColors.light.background,
         borderRadius: 8,
         borderWidth: 1,
-        borderColor: isDarkMode ? AppColors.dark.ripple : AppColors.light.ripple,
+        borderColor: AppColors.primary,
         marginBottom: 16,
         ...style,
       }}>
@@ -34,7 +39,8 @@ const AppPresetListItem = ({
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 8,
+          paddingVertical: 8,
+          paddingHorizontal: 8,
           borderRadius: 8,
         }}>
         <View style={{ flexDirection: 'column', flex: 1, flexGrow: 1 }}>
@@ -109,6 +115,16 @@ const AppPresetListItem = ({
                     marginTop: 4,
                   }}
                 />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  paddingLeft: 16,
+                  flex: 1,
+                }}>
+                <MaterialCommunityIcons name={'chevron-right'} color={AppColors.dark.hint} size={24} />
               </View>
             </View>
           </View>

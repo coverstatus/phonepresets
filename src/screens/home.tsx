@@ -25,6 +25,8 @@ import AppText from '../components/labels/app-text';
 import AppHeaderControls from '../components/app-header-controls';
 import AppPresetListItem from '../components/app-preset-list-item';
 import AppSubtext from '../components/labels/app-subtext';
+import AppDivider from '../components/others/app-divider';
+import AppHint from '../components/labels/app-hint';
 const SharedStorage = NativeModules.SharedStorage;
 const group = 'group.phonepresets';
 
@@ -203,14 +205,47 @@ const HomeScreen = ({ navigation }: any) => {
           <ScrollView style={{ flex: 1, flexGrow: 1 }}>
             <View style={{ padding: 16 }}>
               <View style={{ flexDirection: 'column' }}>
-                {savedPresets.map((item: any) => (
-                  <AppPresetListItem
-                    key={item.id}
-                    presetItem={item}
-                    onPress={() => {
-                      console.log(item);
-                    }}
-                  />
+                {/* <AppHint style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
+                  PRESETS ({savedPresets?.length})
+                </AppHint> */}
+                {/* <AppDivider></AppDivider> */}
+                {savedPresets.map((item: any, index: number) => (
+                  <View key={item.id}>
+                    <AppPresetListItem
+                      presetItem={item}
+                      onPress={async () => {
+                        const brightness = Number(item.brightnessValue.replace('%', '')) / 100;
+                        const volume = Number(item.volumeValue.replace('%', '')) / 100;
+
+                        DeviceBrightness.setBrightnessLevel(brightness);
+                        bValue.current = brightness;
+                        setDeviceBrightness(brightness);
+                        setBrightnessDisplayLabel(item.brightnessValue);
+
+                        await VolumeManager.setVolume(volume);
+                        vValue.current = volume;
+                        setDeviceVolume(volume);
+                        setVolumeDisplayLabel(item.volumeValue);
+
+                        setWidgetData((currentState: any) => {
+                          const dataForWidget = {
+                            ...currentState,
+                            brightnessIcon:
+                              'b' + CommonService.getIconNameSuffix(Number((brightness * 100).toFixed(0))),
+                            brightnessValue: item.brightnessValue,
+                            volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((volume * 100).toFixed(0))),
+                            volumeValue: item.volumeValue,
+                          };
+                          return dataForWidget;
+                        });
+                      }}
+                      active={
+                        deviceBrightness === Number(item.brightnessValue.replace('%', '')) / 100 &&
+                        deviceVolume === Number(item.volumeValue.replace('%', '')) / 100
+                      }
+                    />
+                    {/* {index !== savedPresets.length - 1 && <AppDivider style={{}}></AppDivider>} */}
+                  </View>
                 ))}
               </View>
             </View>
