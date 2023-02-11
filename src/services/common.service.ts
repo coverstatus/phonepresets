@@ -72,4 +72,33 @@ export const CommonService = {
   isProduction: () => {
     return !__DEV__;
   },
+  getIconNameSuffix: (value: number) => {
+    if (value > 75) {
+      return '-76-100';
+    } else if (value > 50 && value <= 75) {
+      return '-51-75';
+    } else if (value > 25 && value <= 50) {
+      return '-26-50';
+    } else if (value > 0 && value <= 25) {
+      return '-1-25';
+    }
+    return '-0';
+  },
+  getImage: (key: string): any => {
+    const images: any = {
+      'b-76-100': require('../assets/images/b-76-100.png'),
+      'b-51-75': require('../assets/images/b-51-75.png'),
+      'b-26-50': require('../assets/images/b-26-50.png'),
+      'b-1-25': require('../assets/images/b-1-25.png'),
+      'b-0': require('../assets/images/b-0.png'),
+      'v-76-100': require('../assets/images/v-76-100.png'),
+      'v-51-75': require('../assets/images/v-51-75.png'),
+      'v-26-50': require('../assets/images/v-26-50.png'),
+      'v-1-25': require('../assets/images/v-1-25.png'),
+      'v-0': require('../assets/images/v-0.png'),
+      s: require('../assets/images/s.png'),
+      r: require('../assets/images/r.png'),
+    };
+    return images[key];
+  },
 };

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { AppState, Image, NativeModules, TextInput, useColorScheme, View } from 'react-native';
+import { AppState, Image, NativeModules, ScrollView, TextInput, useColorScheme, View } from 'react-native';
 import { AppContext } from '../app.context';
 import { AppColors } from '../app.styles';
 import { useFocusEffect } from '@react-navigation/native';
@@ -18,8 +18,17 @@ import { StorageService } from '../services/storage.service';
 import AppIconButton from '../components/buttons/app-icon-button';
 
 import SharedGroupPreferences from 'react-native-shared-group-preferences';
+import { useSilentSwitch, VolumeManager } from 'react-native-volume-manager';
+import DeviceBrightness from '@adrianso/react-native-device-brightness';
+
+import AppText from '../components/labels/app-text';
+import AppPresetTile from '../components/app-preset-tiles';
+import AppHeaderControls from '../components/app-header-controls';
 const SharedStorage = NativeModules.SharedStorage;
 const group = 'group.phonepresets';
+
+VolumeManager.showNativeVolumeUI({ enabled: false });
+VolumeManager.setNativeSilenceCheckInterval(1);
 
 const HomeScreen = ({ navigation }: any) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -27,7 +36,24 @@ const HomeScreen = ({ navigation }: any) => {
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-  const Tab = createMaterialTopTabNavigator();
+  const [deviceBrightness, setDeviceBrightness] = useState(0);
+  const [deviceVolume, setDeviceVolume] = useState(0);
+  const [brightnessDisplayLabel, setBrightnessDisplayLabel] = useState('100%');
+  const [volumeDisplayLabel, setVolumeDisplayLabel] = useState('100%');
+  const [deviceSilent, setDeviceSilent] = useState<boolean>();
+
+  const bValue = useRef(100);
+  const vValue = useRef(100);
+  const sValue = useRef(0);
+
+  const [widgetData, setWidgetData] = useState({
+    brightnessIcon: 'b-76-100',
+    brightnessValue: '100%',
+    volumeIcon: 'v-76-100',
+    volumeValue: '100%',
+    silentIcon: 'r',
+    silentValue: 'Ringer',
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -44,92 +70,152 @@ const HomeScreen = ({ navigation }: any) => {
       setAppStateVisible(appState.current);
     });
 
+    const volumeListener = VolumeManager.addVolumeListener(result => {
+      loadCurrentSettings(AppConstants.TYPE_VOLUME, result.volume);
+    });
+
+    const silentListener = VolumeManager.addSilentListener(status => {
+      loadCurrentSettings(AppConstants.TYPE_SILENT, status.isMuted ? 1 : 0);
+    });
+
     return () => {
+      volumeListener.remove();
+      silentListener.remove();
       subscription.remove();
     };
   }, []);
 
-  const onFocus = async () => {};
+  const onFocus = async () => {
+    const brightness = await DeviceBrightness.getBrightnessLevel();
+    loadCurrentSettings(AppConstants.TYPE_BRIGHTNESS, brightness);
+    const volume = (await VolumeManager.getVolume('music')) as number;
+    loadCurrentSettings(AppConstants.TYPE_VOLUME, volume);
+  };
 
-  const [widgetData, setWidgetData] = useState({
-    brightnessIcon: 'b-80-100',
-    brightnessValue: '100%',
-    volumeIcon: 'v-80-100',
-    volumeValue: '100%',
-    silentIcon: 'r',
-    silentValue: 'Ringer',
-  });
+  const loadCurrentSettings = (type: string, value: number) => {
+    if (type === AppConstants.TYPE_BRIGHTNESS) {
+      bValue.current = value;
+      setDeviceBrightness(value);
+      setBrightnessDisplayLabel((value * 100).toFixed(0) + '%');
+      setWidgetData((currentState: any) => {
+        const dataForWidget = {
+          ...currentState,
+          brightnessIcon: 'b' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
+          brightnessValue: (value * 100).toFixed(0) + '%',
+        };
+        return dataForWidget;
+      });
+    } else if (type === AppConstants.TYPE_VOLUME) {
+      vValue.current = value;
+      setDeviceVolume(value);
+      setVolumeDisplayLabel((value * 100).toFixed(0) + '%');
+      setWidgetData((currentState: any) => {
+        const dataForWidget = {
+          ...currentState,
+          volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
+          volumeValue: (value * 100).toFixed(0) + '%',
+        };
+        return dataForWidget;
+      });
+    } else if (type === AppConstants.TYPE_SILENT) {
+      sValue.current = value;
+      setDeviceSilent(value ? true : false);
+      setWidgetData((currentState: any) => {
+        const dataForWidget = {
+          ...currentState,
+          silentIcon: value ? 's' : 'r',
+          silentValue: value ? 'Silent' : 'Ringer',
+        };
+        return dataForWidget;
+      });
+    }
+  };
 
-  const handleSubmit = async (data: any) => {
+  const sendDataToWidget = async () => {
+    console.log(widgetData);
     try {
       if (CommonService.isIos()) {
-        await SharedGroupPreferences.setItem('widgetKey', data, group);
+        await SharedGroupPreferences.setItem('widgetKey', widgetData, group);
       } else {
-        SharedStorage.set(JSON.stringify(data));
+        SharedStorage.set(JSON.stringify(widgetData));
       }
     } catch (error) {
-      console.log({ error });
+      console.log(JSON.stringify(error));
     }
   };
 
   return (
     <AppScreenContainer>
-      <ScreenHeader navigation={navigation} />
-      <View style={{ flex: 1, flexGrow: 1, padding: 16 }}>
-        <AppIconButton
-          icon="cog"
-          iconColor={AppColors.success}
-          style={{
-            height: 36,
-          }}
-          isHighlighted={true}
-          onPress={() => {
-            const data = {
-              brightnessIcon: 'b-51-75',
-              brightnessValue: '75%',
-              volumeIcon: 'v-51-75',
-              volumeValue: '75%',
-              silentIcon: 's',
-              silentValue: 'Silent',
-            };
-            setWidgetData(data);
-            handleSubmit(data);
-          }}
+      {/* <ScreenHeader navigation={navigation} /> */}
+      <View style={{ flex: 1, flexGrow: 1 }}>
+        <AppHeaderControls
+          brightness={Number((deviceBrightness * 100).toFixed(0))}
+          volume={Number((deviceVolume * 100).toFixed(0))}
+          silent={deviceSilent ? true : false}
         />
+        <ScrollView style={{ flex: 1, flexGrow: 1 }}>
+          <View style={{ padding: 16 }}>
+            <View style={{ flexDirection: 'column' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <AppPresetTile label="MAX BRIGHT / MAX VOL" brightness={100} volume={100} style={{ marginRight: 8 }} />
+                <AppPresetTile label="HALF BRIGHT / HALF VOL" brightness={50} volume={50} style={{ marginLeft: 8 }} />
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <AppPresetTile label="MAX BRIGHT / HALF VOL" brightness={100} volume={50} style={{ marginRight: 8 }} />
+                <AppPresetTile label="HALF BRIGHT / MAX VOL" brightness={50} volume={100} style={{ marginLeft: 8 }} />
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <AppPresetTile label="LOW BRIGHT / MIN VOL" brightness={25} volume={0} style={{ marginRight: 8 }} />
+                <AppPresetTile label="MIN BRIGHT / LOW VOL" brightness={0} volume={25} style={{ marginLeft: 8 }} />
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                <AppPresetTile label="LOW BRIGHT / LOW VOL" brightness={10} volume={10} style={{ marginRight: 8 }} />
+                <AppPresetTile label="MIN BRIGHT / MIN VOL" brightness={0} volume={0} style={{ marginLeft: 8 }} />
+              </View>
+            </View>
+            <AppButton
+              mode="contained"
+              text="Update Widget"
+              style={{ paddingVertical: 4 }}
+              isHighlighted={false}
+              onPress={() => {
+                sendDataToWidget();
+              }}></AppButton>
+          </View>
+        </ScrollView>
       </View>
     </AppScreenContainer>
   );
 };
 
-const ScreenHeader = ({ navigation }: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [state, setState]: any = useContext(AppContext);
+// const ScreenHeader = ({ navigation }: any) => {
+//   const isDarkMode = useColorScheme() === 'dark';
+//   const [state, setState]: any = useContext(AppContext);
 
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 64,
-        paddingHorizontal: 16,
-      }}>
-      <Image source={require('../assets/images/logo.png')} style={{ height: 56, width: 56, marginBottom: 0 }} />
-      <AppHeading style={{}}>Phone Presets</AppHeading>
-      <View style={{ flexGrow: 1 }} />
-      <AppIconButton
-        icon="cog"
-        iconColor={AppColors.success}
-        style={{
-          flexDirection: 'row',
-          height: 36,
-          marginLeft: 8,
-        }}
-        isHighlighted={true}
-        onPress={() => {}}
-      />
-    </View>
-  );
-};
+//   return (
+//     <View
+//       style={{
+//         flexDirection: 'row',
+//         justifyContent: 'space-between',
+//         alignItems: 'center',
+//         paddingHorizontal: 16,
+//         paddingBottom: 8,
+//         backgroundColor: AppColors.primary,
+//       }}>
+//       {/* <Image source={require('../assets/images/logo.png')} style={{ height: 42, width: 42, marginRight: 8 }} /> */}
+//       <AppHeading style={{ color: AppColors.dark.text }}>Phone Presets</AppHeading>
+//       <View style={{ flexGrow: 1 }} />
+//       <AppIconButton
+//         icon="cog"
+//         iconStyle={{ color: AppColors.dark.text }}
+//         isDarkMode={true}
+//         style={{
+//           flexDirection: 'row',
+//         }}
+//         onPress={() => {}}
+//       />
+//     </View>
+//   );
+// };
 
 export default HomeScreen;

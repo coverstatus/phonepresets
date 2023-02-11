@@ -40,7 +40,7 @@ const App = () => {
   const Stack = createNativeStackNavigator();
 
   useEffect(() => {
-    SystemNavigationBar.setNavigationColor(isDarkMode ? AppColors.dark.background : AppColors.light.background);
+    SystemNavigationBar.setNavigationColor(AppColors.primary);
   }, []);
 
   useEffect(() => {
@@ -134,11 +134,7 @@ const App = () => {
     <View style={{ flex: 1, backgroundColor: isDarkMode ? AppColors.dark.background : AppColors.light.background }}>
       <PaperProvider theme={theme}>
         <AppContext.Provider value={[state, setState] as any}>
-          <MyStatusBar
-            animated={true}
-            backgroundColor={isDarkMode ? AppColors.dark.background : AppColors.light.background}
-            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          />
+          <MyStatusBar animated={true} backgroundColor={AppColors.primary} barStyle={'light-content'} />
           <NavigationContainer>
             <Stack.Navigator
               screenOptions={{

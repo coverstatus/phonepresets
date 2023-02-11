@@ -6,9 +6,16 @@ import { AppColors } from '../../app.styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { CommonService } from '../../services/common.service';
 
-const AppIconButton = ({ icon, style, disabled, backgroundColor, onPress, iconSize = 24, iconStyle }: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
-
+const AppIconButton = ({
+  icon,
+  style,
+  disabled,
+  backgroundColor,
+  onPress,
+  iconSize = 24,
+  iconStyle,
+  isDarkMode = useColorScheme() === 'dark',
+}: any) => {
   return (
     <TouchableRipple
       onPress={onPress}

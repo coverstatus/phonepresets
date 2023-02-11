@@ -11,4 +11,7 @@ export const AppConstants = {
   STORAGE_KEY_MOOD: '@STORAGE_KEY_MOOD',
   STORAGE_KEY_IS_SUBSCRIBED: '@STORAGE_KEY_IS_SUBSCRIBED',
   SUBSCRIPTION_MONTHLY_PRODUCT_ID: 'com.twitterai.monthly',
+  TYPE_BRIGHTNESS: 'brightness',
+  TYPE_VOLUME: 'volume',
+  TYPE_SILENT: 'silent',
 };
