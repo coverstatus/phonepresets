@@ -16,6 +16,7 @@ import CreateScreen from './create';
 import ReplyScreen from './reply';
 import { StorageService } from '../services/storage.service';
 import AppIconButton from '../components/buttons/app-icon-button';
+import { changeIcon, getIcon } from 'react-native-change-icon';
 
 import SharedGroupPreferences from 'react-native-shared-group-preferences';
 import { useSilentSwitch, VolumeManager } from 'react-native-volume-manager';
@@ -44,6 +45,8 @@ const HomeScreen = ({ navigation }: any) => {
   const [brightnessDisplayLabel, setBrightnessDisplayLabel] = useState('100%');
   const [volumeDisplayLabel, setVolumeDisplayLabel] = useState('100%');
   const [deviceSilent, setDeviceSilent] = useState<boolean>(false);
+  const [autochangeIcon, setAutochangeIcon] = useState(false);
+  const [silentIconApplied, setSilentIconApplied] = useState(false);
 
   const bValue = useRef(100);
   const vValue = useRef(100);
@@ -79,8 +82,27 @@ const HomeScreen = ({ navigation }: any) => {
       loadCurrentSettings(AppConstants.TYPE_VOLUME, result.volume);
     });
 
-    const silentListener = VolumeManager.addSilentListener(status => {
+    const silentListener = VolumeManager.addSilentListener(async status => {
       loadCurrentSettings(AppConstants.TYPE_SILENT, status.isMuted ? 1 : 0);
+      const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
+      setAutochangeIcon(isAutochangeIconEnabled);
+      if (isAutochangeIconEnabled) {
+        if (status.isMuted) {
+          getIcon().then((response: any) => {
+            if (response !== 'silent') {
+              changeIcon('silent');
+              setSilentIconApplied(true);
+            }
+          });
+        } else {
+          getIcon().then((response: any) => {
+            if (response !== 'default') {
+              changeIcon('default');
+              setSilentIconApplied(false);
+            }
+          });
+        }
+      }
     });
 
     return () => {
@@ -97,6 +119,16 @@ const HomeScreen = ({ navigation }: any) => {
     loadCurrentSettings(AppConstants.TYPE_VOLUME, volume);
     const saved = await CommonService.getPresets();
     setSavedPresets(saved);
+    const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
+    setAutochangeIcon(isAutochangeIconEnabled);
+
+    getIcon().then((response: any) => {
+      if (response === 'silent') {
+        setSilentIconApplied(true);
+      } else {
+        setSilentIconApplied(false);
+      }
+    });
   };
 
   const loadCurrentSettings = (type: string, value: number) => {
@@ -110,6 +142,7 @@ const HomeScreen = ({ navigation }: any) => {
           brightnessIcon: 'b' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
           brightnessValue: (value * 100).toFixed(0) + '%',
         };
+        sendDataToWidget(dataForWidget);
         return dataForWidget;
       });
     } else if (type === AppConstants.TYPE_VOLUME) {
@@ -122,6 +155,7 @@ const HomeScreen = ({ navigation }: any) => {
           volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
           volumeValue: (value * 100).toFixed(0) + '%',
         };
+        sendDataToWidget(dataForWidget);
         return dataForWidget;
       });
     } else if (type === AppConstants.TYPE_SILENT) {
@@ -133,18 +167,19 @@ const HomeScreen = ({ navigation }: any) => {
           silentIcon: value ? 's' : 'r',
           silentValue: value ? 'Silent' : 'Ringer',
         };
+        sendDataToWidget(dataForWidget);
         return dataForWidget;
       });
     }
   };
 
-  const sendDataToWidget = async () => {
-    console.log(widgetData);
+  const sendDataToWidget = async (data: any) => {
+    // console.log(data);
     try {
       if (CommonService.isIos()) {
-        await SharedGroupPreferences.setItem('widgetKey', widgetData, group);
+        await SharedGroupPreferences.setItem('widgetKey', data, group);
       } else {
-        SharedStorage.set(JSON.stringify(widgetData));
+        SharedStorage.set(JSON.stringify(data));
       }
     } catch (error) {
       console.log(JSON.stringify(error));
@@ -155,6 +190,42 @@ const HomeScreen = ({ navigation }: any) => {
     <AppScreenContainer>
       <ScreenHeader navigation={navigation} />
       <View style={{ flex: 1, flexGrow: 1 }}>
+        {deviceSilent && (
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              backgroundColor: '#e74242',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <MaterialCommunityIcons color={AppColors.dark.text} name={'bell-off'} size={22} />
+              <AppText style={{ fontWeight: '600', marginLeft: 8 }}>SILENT MODE</AppText>
+            </View>
+            {!autochangeIcon && !silentIconApplied && (
+              <AppButton
+                icon="chevron-right-circle"
+                mode="outlined"
+                text="Show on App Icon"
+                iconOnRight={true}
+                style={{ marginBottom: 2 }}
+                isHighlighted={false}
+                onPress={() => {
+                  getIcon().then((response: any) => {
+                    if (response !== 'silent') {
+                      changeIcon('silent');
+                      setSilentIconApplied(true);
+                    }
+                  });
+                }}></AppButton>
+            )}
+          </View>
+        )}
+        <AppHint style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: -4, marginLeft: 2 }}>
+          CURRENT SETTINGS
+        </AppHint>
         <AppHeaderControls
           brightness={Number((deviceBrightness * 100).toFixed(0))}
           volume={Number((deviceVolume * 100).toFixed(0))}
@@ -170,6 +241,7 @@ const HomeScreen = ({ navigation }: any) => {
                 brightnessIcon: 'b' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
                 brightnessValue: (value * 100).toFixed(0) + '%',
               };
+              sendDataToWidget(dataForWidget);
               return dataForWidget;
             });
           }}
@@ -184,6 +256,7 @@ const HomeScreen = ({ navigation }: any) => {
                 volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
                 volumeValue: (value * 100).toFixed(0) + '%',
               };
+              sendDataToWidget(dataForWidget);
               return dataForWidget;
             });
           }}
@@ -201,14 +274,13 @@ const HomeScreen = ({ navigation }: any) => {
             setSavedPresets(saved);
           }}
         />
+        <AppHint style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: 12, marginLeft: 2 }}>
+          SAVED PRESETS ({savedPresets?.length || 0})
+        </AppHint>
         {savedPresets?.length ? (
           <ScrollView style={{ flex: 1, flexGrow: 1 }}>
-            <View style={{ padding: 16 }}>
+            <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
               <View style={{ flexDirection: 'column' }}>
-                {/* <AppHint style={{ paddingHorizontal: 16, paddingVertical: 16 }}>
-                  PRESETS ({savedPresets?.length})
-                </AppHint> */}
-                {/* <AppDivider></AppDivider> */}
                 {savedPresets.map((item: any, index: number) => (
                   <View key={item.id}>
                     <AppPresetListItem
@@ -236,6 +308,7 @@ const HomeScreen = ({ navigation }: any) => {
                             volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((volume * 100).toFixed(0))),
                             volumeValue: item.volumeValue,
                           };
+                          sendDataToWidget(dataForWidget);
                           return dataForWidget;
                         });
                       }}
@@ -244,7 +317,6 @@ const HomeScreen = ({ navigation }: any) => {
                         deviceVolume === Number(item.volumeValue.replace('%', '')) / 100
                       }
                     />
-                    {/* {index !== savedPresets.length - 1 && <AppDivider style={{}}></AppDivider>} */}
                   </View>
                 ))}
               </View>
@@ -275,6 +347,7 @@ const ScreenHeader = ({ navigation }: any) => {
         alignItems: 'center',
         paddingHorizontal: 16,
         paddingTop: 8,
+        paddingBottom: 8,
         backgroundColor: AppColors.primary,
       }}>
       {/* <Image source={require('../assets/images/logo.png')} style={{ height: 42, width: 42, marginRight: 8 }} /> */}
@@ -287,7 +360,9 @@ const ScreenHeader = ({ navigation }: any) => {
         style={{
           flexDirection: 'row',
         }}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate('Settings');
+        }}
       />
     </View>
   );

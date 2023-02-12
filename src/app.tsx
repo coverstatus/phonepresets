@@ -12,13 +12,14 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 // SCREENS
 import HomeScreen from './screens/home';
 import AboutScreen from './screens/about';
+import PurchaseScreen from './screens/purchase';
+import SettingsScreen from './screens/settings';
 
 // COMMON
 import { AppColors, AppStyles } from './app.styles';
 import { InitialState, AppContext } from './app.context';
 import { StorageService } from './services/storage.service';
 import { AppConstants } from './app.constants';
-import PurchaseScreen from './screens/purchase';
 import { CommonService } from './services/common.service';
 
 // THEME
@@ -147,6 +148,7 @@ const App = () => {
               <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
               <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Purchase" component={PurchaseScreen} options={{ headerShown: false }} />
+              <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>
           {state.isLoading ? (

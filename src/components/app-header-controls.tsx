@@ -18,10 +18,10 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
     <View
       style={{
         flexDirection: 'column',
-        paddingHorizontal: 16,
-        paddingBottom: 8,
-        paddingTop: 8,
+        padding: 8,
         backgroundColor: AppColors.primary,
+        margin: 16,
+        borderRadius: 8,
       }}>
       <View
         style={{
@@ -29,12 +29,11 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
           alignItems: 'center',
           justifyContent: 'center',
           borderRadius: 8,
-          paddingBottom: 8,
         }}>
         <View
           style={{
             flexGrow: 1,
-            paddingHorizontal: 16,
+            paddingHorizontal: 8,
             paddingVertical: 2,
             flexDirection: 'row',
             alignItems: 'center',
@@ -57,7 +56,7 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
               onBrightnessChange(value);
             }}
           />
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -69,12 +68,12 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
               color={isDarkMode ? AppColors.dark.text : 'rgba(255,255,255,0.4)'}
               size={24}
             />
-          </View>
+          </View> */}
         </View>
         <View
           style={{
             flexGrow: 1,
-            paddingHorizontal: 16,
+            paddingHorizontal: 8,
             paddingVertical: 2,
             flexDirection: 'row',
             alignItems: 'center',
@@ -100,27 +99,6 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'flex-start',
-              borderRadius: 8,
-              height: 42,
-              width: 42,
-            }}>
-            {silent && (
-              <View
-                style={{
-                  paddingHorizontal: 16,
-                  paddingVertical: 8,
-                  borderRadius: 8,
-                  backgroundColor: AppColors.primaryLight,
-                }}>
-                <Image source={CommonService.getImage(silent ? 's' : 'r')} style={{ height: 24, width: 24 }} />
-              </View>
-            )}
-          </View> */}
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
               justifyContent: 'center',
               paddingLeft: 16,
             }}>
@@ -129,7 +107,7 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
               color={silent ? '#e74242' : 'rgba(255,255,255,0.4)'}
               size={24}
             />
-          </View>
+          </View> */}
         </View>
         <View
           style={{

@@ -20,11 +20,7 @@ const AppPresetListItem = ({
   return (
     <Surface
       style={{
-        backgroundColor: active
-          ? AppColors.primary
-          : isDarkMode
-          ? AppColors.dark.background
-          : AppColors.light.background,
+        backgroundColor: AppColors.primary,
         borderRadius: 8,
         borderWidth: 1,
         borderColor: AppColors.primary,
@@ -73,7 +69,9 @@ const AppPresetListItem = ({
                 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image source={CommonService.getImage(presetItem.brightnessIcon)} style={{ height: 28, width: 28 }} />
-                  <AppSubtext style={{ opacity: 1, marginLeft: 8 }}>{presetItem.brightnessValue}</AppSubtext>
+                  <AppSubtext style={{ opacity: 1, marginLeft: 8, color: AppColors.dark.text }}>
+                    {presetItem.brightnessValue}
+                  </AppSubtext>
                 </View>
                 <ProgressBar
                   progress={Number(presetItem.brightnessValue.replace('%', '')) / 100}
@@ -101,7 +99,9 @@ const AppPresetListItem = ({
                 }}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Image source={CommonService.getImage(presetItem.volumeIcon)} style={{ height: 28, width: 28 }} />
-                  <AppSubtext style={{ opacity: 1, marginLeft: 8 }}>{presetItem.volumeValue}</AppSubtext>
+                  <AppSubtext style={{ opacity: 1, marginLeft: 8, color: AppColors.dark.text }}>
+                    {presetItem.volumeValue}
+                  </AppSubtext>
                 </View>
                 <ProgressBar
                   progress={Number(presetItem.volumeValue.replace('%', '')) / 100}
@@ -124,7 +124,11 @@ const AppPresetListItem = ({
                   paddingLeft: 16,
                   flex: 1,
                 }}>
-                <MaterialCommunityIcons name={'chevron-right'} color={AppColors.dark.hint} size={24} />
+                {active ? (
+                  <MaterialCommunityIcons name={'check-circle'} color={AppColors.success} size={24} />
+                ) : (
+                  <MaterialCommunityIcons name={'chevron-right-circle'} color={AppColors.dark.hint} size={24} />
+                )}
               </View>
             </View>
           </View>

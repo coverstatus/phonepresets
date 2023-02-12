@@ -19,6 +19,7 @@
     "moment": "^2.29.4",
     "react": "18.2.0",
     "react-native": "0.71.2",
+    "react-native-change-icon": "^4.0.0",
     "react-native-crypto-js": "^1.0.0",
     "react-native-element-dropdown": "^2.6.0",
     "react-native-encrypted-storage": "^4.0.3",

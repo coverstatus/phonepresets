@@ -14,6 +14,14 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-PhonePresets-PhonePresetsTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-PhonePresets-PhonePresetsTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8997FE3B29990C7300A3590A /* default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3729990C7300A3590A /* default@3x.png */; };
+		8997FE3C29990C7300A3590A /* default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3729990C7300A3590A /* default@3x.png */; };
+		8997FE3D29990C7300A3590A /* silent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3829990C7300A3590A /* silent@2x.png */; };
+		8997FE3E29990C7300A3590A /* silent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3829990C7300A3590A /* silent@2x.png */; };
+		8997FE3F29990C7300A3590A /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3929990C7300A3590A /* default@2x.png */; };
+		8997FE4029990C7300A3590A /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3929990C7300A3590A /* default@2x.png */; };
+		8997FE4129990C7300A3590A /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3A29990C7300A3590A /* silent@3x.png */; };
+		8997FE4229990C7300A3590A /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8997FE3A29990C7300A3590A /* silent@3x.png */; };
 		89AC2D4529961D8400378EA0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89AC2D4429961D8400378EA0 /* WidgetKit.framework */; };
 		89AC2D4729961D8400378EA0 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89AC2D4629961D8400378EA0 /* SwiftUI.framework */; };
 		89AC2D4A29961D8400378EA0 /* WidgetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AC2D4929961D8400378EA0 /* WidgetExtension.swift */; };
@@ -96,6 +104,10 @@
 		5B7EB9410499542E8C5724F5 /* Pods-PhonePresets-PhonePresetsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhonePresets-PhonePresetsTests.debug.xcconfig"; path = "Target Support Files/Pods-PhonePresets-PhonePresetsTests/Pods-PhonePresets-PhonePresetsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-PhonePresets.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PhonePresets.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PhonePresets/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8997FE3729990C7300A3590A /* default@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@3x.png"; sourceTree = "<group>"; };
+		8997FE3829990C7300A3590A /* silent@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@2x.png"; sourceTree = "<group>"; };
+		8997FE3929990C7300A3590A /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
+		8997FE3A29990C7300A3590A /* silent@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@3x.png"; sourceTree = "<group>"; };
 		89AC2D4329961D8400378EA0 /* WidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		89AC2D4429961D8400378EA0 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		89AC2D4629961D8400378EA0 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -246,6 +258,10 @@
 		89AC2DD12996363500378EA0 /* AppIcons */ = {
 			isa = PBXGroup;
 			children = (
+				8997FE3929990C7300A3590A /* default@2x.png */,
+				8997FE3729990C7300A3590A /* default@3x.png */,
+				8997FE3829990C7300A3590A /* silent@2x.png */,
+				8997FE3A29990C7300A3590A /* silent@3x.png */,
 				89AC2E4D29966A9700378EA0 /* b-0.png */,
 				89AC2E4629966A9700378EA0 /* b-1-25.png */,
 				89AC2E4929966A9700378EA0 /* b-26-50.png */,
@@ -394,15 +410,19 @@
 				89AC2E5829966A9700378EA0 /* b-51-75.png in Resources */,
 				89AC2E5029966A9700378EA0 /* v-0.png in Resources */,
 				89AC2E5229966A9700378EA0 /* v-1-25.png in Resources */,
+				8997FE3F29990C7300A3590A /* default@2x.png in Resources */,
 				89AC2E6429966A9700378EA0 /* b-76-100.png in Resources */,
 				89AC2E5E29966A9700378EA0 /* v-26-50.png in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				89AC2E6029966A9700378EA0 /* v-76-100.png in Resources */,
 				89AC2E5629966A9700378EA0 /* s.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				8997FE3D29990C7300A3590A /* silent@2x.png in Resources */,
 				89AC2E5429966A9700378EA0 /* b-1-25.png in Resources */,
 				89AC2E6229966A9700378EA0 /* b-0.png in Resources */,
 				89AC2E5A29966A9700378EA0 /* b-26-50.png in Resources */,
+				8997FE4129990C7300A3590A /* silent@3x.png in Resources */,
+				8997FE3B29990C7300A3590A /* default@3x.png in Resources */,
 				89AC2E6629966A9700378EA0 /* r.png in Resources */,
 				89AC2E5C29966A9700378EA0 /* v-51-75.png in Resources */,
 			);
@@ -412,6 +432,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8997FE4029990C7300A3590A /* default@2x.png in Resources */,
 				89AC2E6329966A9700378EA0 /* b-0.png in Resources */,
 				89AC2E5D29966A9700378EA0 /* v-51-75.png in Resources */,
 				89AC2E5B29966A9700378EA0 /* b-26-50.png in Resources */,
@@ -419,9 +440,12 @@
 				89AC2E6529966A9700378EA0 /* b-76-100.png in Resources */,
 				89AC2E6729966A9700378EA0 /* r.png in Resources */,
 				89AC2E5F29966A9700378EA0 /* v-26-50.png in Resources */,
+				8997FE3C29990C7300A3590A /* default@3x.png in Resources */,
 				89AC2E6129966A9700378EA0 /* v-76-100.png in Resources */,
+				8997FE4229990C7300A3590A /* silent@3x.png in Resources */,
 				89AC2E5529966A9700378EA0 /* b-1-25.png in Resources */,
 				89AC2E5729966A9700378EA0 /* s.png in Resources */,
+				8997FE3E29990C7300A3590A /* silent@2x.png in Resources */,
 				89AC2D4D29961D8500378EA0 /* Assets.xcassets in Resources */,
 				89AC2E5929966A9700378EA0 /* b-51-75.png in Resources */,
 				89AC2E5129966A9700378EA0 /* v-0.png in Resources */,
