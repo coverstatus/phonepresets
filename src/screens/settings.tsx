@@ -40,7 +40,8 @@ const SettingsScreen = ({ navigation }: any) => {
   );
 
   const onFocus = async () => {
-    setAutochangeIcon((await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false);
+    const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
+    setAutochangeIcon(isAutochangeIconEnabled);
     scrollRef.current?.scrollTo({ y: 0, animated: false });
   };
 

@@ -32,7 +32,7 @@ const SharedStorage = NativeModules.SharedStorage;
 const group = 'group.phonepresets';
 
 VolumeManager.showNativeVolumeUI({ enabled: false });
-VolumeManager.setNativeSilenceCheckInterval(1);
+VolumeManager.setNativeSilenceCheckInterval(2);
 
 const HomeScreen = ({ navigation }: any) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -42,18 +42,10 @@ const HomeScreen = ({ navigation }: any) => {
 
   const [deviceBrightness, setDeviceBrightness] = useState(0);
   const [deviceVolume, setDeviceVolume] = useState(0);
-  const [brightnessDisplayLabel, setBrightnessDisplayLabel] = useState('100%');
-  const [volumeDisplayLabel, setVolumeDisplayLabel] = useState('100%');
   const [deviceSilent, setDeviceSilent] = useState<boolean>(false);
   const [autochangeIcon, setAutochangeIcon] = useState(false);
   const [silentIconApplied, setSilentIconApplied] = useState(false);
-
-  const bValue = useRef(100);
-  const vValue = useRef(100);
-  const sValue = useRef(0);
-
   const [savedPresets, setSavedPresets] = useState([]);
-
   const [widgetData, setWidgetData] = useState({
     brightnessIcon: 'b-76-100',
     brightnessValue: '100%',
@@ -133,9 +125,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   const loadCurrentSettings = (type: string, value: number) => {
     if (type === AppConstants.TYPE_BRIGHTNESS) {
-      bValue.current = value;
       setDeviceBrightness(value);
-      setBrightnessDisplayLabel((value * 100).toFixed(0) + '%');
       setWidgetData((currentState: any) => {
         const dataForWidget = {
           ...currentState,
@@ -146,9 +136,7 @@ const HomeScreen = ({ navigation }: any) => {
         return dataForWidget;
       });
     } else if (type === AppConstants.TYPE_VOLUME) {
-      vValue.current = value;
       setDeviceVolume(value);
-      setVolumeDisplayLabel((value * 100).toFixed(0) + '%');
       setWidgetData((currentState: any) => {
         const dataForWidget = {
           ...currentState,
@@ -159,7 +147,6 @@ const HomeScreen = ({ navigation }: any) => {
         return dataForWidget;
       });
     } else if (type === AppConstants.TYPE_SILENT) {
-      sValue.current = value;
       setDeviceSilent(value ? true : false);
       setWidgetData((currentState: any) => {
         const dataForWidget = {
@@ -174,7 +161,6 @@ const HomeScreen = ({ navigation }: any) => {
   };
 
   const sendDataToWidget = async (data: any) => {
-    // console.log(data);
     try {
       if (CommonService.isIos()) {
         await SharedGroupPreferences.setItem('widgetKey', data, group);
@@ -232,9 +218,7 @@ const HomeScreen = ({ navigation }: any) => {
           silent={deviceSilent ? true : false}
           onBrightnessChange={(value: number) => {
             DeviceBrightness.setBrightnessLevel(value);
-            bValue.current = value;
             setDeviceBrightness(value);
-            setBrightnessDisplayLabel((value * 100).toFixed(0) + '%');
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,
@@ -247,9 +231,7 @@ const HomeScreen = ({ navigation }: any) => {
           }}
           onVolumeChange={async (value: number) => {
             await VolumeManager.setVolume(value);
-            vValue.current = value;
             setDeviceVolume(value);
-            setVolumeDisplayLabel((value * 100).toFixed(0) + '%');
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,
@@ -290,14 +272,10 @@ const HomeScreen = ({ navigation }: any) => {
                         const volume = Number(item.volumeValue.replace('%', '')) / 100;
 
                         DeviceBrightness.setBrightnessLevel(brightness);
-                        bValue.current = brightness;
                         setDeviceBrightness(brightness);
-                        setBrightnessDisplayLabel(item.brightnessValue);
 
                         await VolumeManager.setVolume(volume);
-                        vValue.current = volume;
                         setDeviceVolume(volume);
-                        setVolumeDisplayLabel(item.volumeValue);
 
                         setWidgetData((currentState: any) => {
                           const dataForWidget = {
@@ -313,8 +291,8 @@ const HomeScreen = ({ navigation }: any) => {
                         });
                       }}
                       active={
-                        deviceBrightness === Number(item.brightnessValue.replace('%', '')) / 100 &&
-                        deviceVolume === Number(item.volumeValue.replace('%', '')) / 100
+                        deviceBrightness === Number(Number(item.brightnessValue.replace('%', '')).toFixed(2)) / 100 &&
+                        deviceVolume === Number(Number(item.volumeValue.replace('%', '')).toFixed(2)) / 100
                       }
                     />
                   </View>
