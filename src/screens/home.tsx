@@ -17,7 +17,6 @@ import ReplyScreen from './reply';
 import { StorageService } from '../services/storage.service';
 import AppIconButton from '../components/buttons/app-icon-button';
 import { changeIcon, getIcon } from 'react-native-change-icon';
-// import { IsMuted } from 'react-native-is-muted';
 
 import SharedGroupPreferences from 'react-native-shared-group-preferences';
 import { VolumeManager } from 'react-native-volume-manager';
@@ -66,20 +65,6 @@ const HomeScreen = ({ navigation }: any) => {
       onFocus();
     }, []),
   );
-
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     const newValue = (await IsMuted()) ? true : false;
-  //     if (isMuted.current !== newValue) {
-  //       onSilentSwitchChange(newValue);
-  //     }
-  //     isMuted.current = newValue;
-  //   }, 2000);
-
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
 
   const onSilentSwitchChange = async (value: boolean) => {
     loadCurrentSettings(AppConstants.TYPE_SILENT, value ? 1 : 0);
