@@ -13,11 +13,11 @@ struct WidgetData: Decodable {
 
 struct Provider: IntentTimelineProvider {
   func placeholder(in context: Context) -> SimpleEntry {
-    SimpleEntry(date: Date(), configuration: ConfigurationIntent(), brightnessIcon: "b-80-100", brightnessValue: "100%", volumeIcon: "v-80-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer");
+    SimpleEntry(date: Date(), configuration: ConfigurationIntent(), brightnessIcon: "b-76-100", brightnessValue: "100%", volumeIcon: "v-76-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer");
   }
 
   func getSnapshot(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-      let entry = SimpleEntry(date: Date(), configuration: configuration, brightnessIcon: "b-80-100", brightnessValue: "100%", volumeIcon: "v-80-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer")
+      let entry = SimpleEntry(date: Date(), configuration: configuration, brightnessIcon: "b-76-100", brightnessValue: "100%", volumeIcon: "v-76-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer")
       completion(entry)
   }
 
@@ -38,7 +38,7 @@ struct Provider: IntentTimelineProvider {
             }
         } else {
             let nextRefresh = Calendar.current.date(byAdding: .minute, value: 1, to: entryDate)!
-            let entry = SimpleEntry(date: nextRefresh, configuration: configuration, brightnessIcon: "b-80-100", brightnessValue: "100%", volumeIcon: "v-80-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer")
+            let entry = SimpleEntry(date: nextRefresh, configuration: configuration, brightnessIcon: "b-76-100", brightnessValue: "100%", volumeIcon: "v-76-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer")
             let timeline = Timeline(entries: [entry], policy: .atEnd)
             completion(timeline)
         }
@@ -60,7 +60,7 @@ struct Provider: IntentTimelineProvider {
     var entry: Provider.Entry;
     var body: some View {
       ZStack {
-        Color(red: 23/255, green: 10/255, blue: 45/255).ignoresSafeArea()
+        Color(red: 29/255, green: 22/255, blue: 41/255).ignoresSafeArea()
           HStack(spacing: 8) {
             VStack() {
               Image(uiImage: UIImage(named: entry.brightnessIcon)!).resizable()
@@ -94,14 +94,14 @@ struct Provider: IntentTimelineProvider {
           IntentConfiguration(kind: kind, intent: ConfigurationIntent.self, provider: Provider()) { entry in
               MyWidgetEntryView(entry: entry)
           }
-          .configurationDisplayName("My Widget")
-          .description("This is an example widget.")
+          .configurationDisplayName("Phone Presets")
+          .description("Displays your current settings.")
       }
   }
 
   struct MyWidget_Previews: PreviewProvider {
       static var previews: some View {
-          MyWidgetEntryView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent(), brightnessIcon: "b-80-100", brightnessValue: "100%", volumeIcon: "v-80-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer"))
+          MyWidgetEntryView(entry: SimpleEntry(date: Date(), configuration: ConfigurationIntent(), brightnessIcon: "b-76-100", brightnessValue: "100%", volumeIcon: "v-76-100", volumeValue: "100%", silentIcon: "r", silentValue: "Ringer"))
               .previewContext(WidgetPreviewContext(family: .systemSmall))
       }
   }

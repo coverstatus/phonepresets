@@ -6,6 +6,7 @@ import { AppColors } from '../../app.styles';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppSubtext from '../labels/app-subtext';
 import { AppConstants } from '../../app.constants';
+import { Image } from 'react-native';
 
 const AppButton = ({
   icon,
@@ -18,6 +19,8 @@ const AppButton = ({
   iconSize = 22,
   isHighlighted = false,
   iconColor,
+  imageComponent,
+  buttonBackgroundColor,
 }: any) => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -62,7 +65,10 @@ const AppButton = ({
 
   return (
     <Surface
-      style={{ backgroundColor: getBackgroundColor(), borderRadius: AppConstants.BORDER_RADIUS }}
+      style={{
+        backgroundColor: buttonBackgroundColor ? buttonBackgroundColor : getBackgroundColor(),
+        borderRadius: AppConstants.BORDER_RADIUS,
+      }}
       elevation={mode === 'contained' && !disabled ? 1 : 0}>
       <TouchableRipple
         onPress={onPress}
@@ -88,6 +94,7 @@ const AppButton = ({
             paddingTop: 4,
             paddingBottom: 6,
           }}>
+          {imageComponent}
           {iconOnRight ? (
             <>
               <AppSubtext
