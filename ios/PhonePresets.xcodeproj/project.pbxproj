@@ -16,12 +16,12 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		89A4AF4E2999834900A2C0FE /* default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4A2999834800A2C0FE /* default@3x.png */; };
 		89A4AF4F2999834900A2C0FE /* default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4A2999834800A2C0FE /* default@3x.png */; };
-		89A4AF502999834900A2C0FE /* silent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4B2999834800A2C0FE /* silent@2x.png */; };
-		89A4AF512999834900A2C0FE /* silent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4B2999834800A2C0FE /* silent@2x.png */; };
 		89A4AF522999834900A2C0FE /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4C2999834800A2C0FE /* default@2x.png */; };
 		89A4AF532999834900A2C0FE /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4C2999834800A2C0FE /* default@2x.png */; };
-		89A4AF542999834900A2C0FE /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4D2999834800A2C0FE /* silent@3x.png */; };
-		89A4AF552999834900A2C0FE /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF4D2999834800A2C0FE /* silent@3x.png */; };
+		89A4AF582999E82C00A2C0FE /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF562999E82B00A2C0FE /* silent@3x.png */; };
+		89A4AF592999E82C00A2C0FE /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF562999E82B00A2C0FE /* silent@3x.png */; };
+		89A4AF5A2999E82C00A2C0FE /* silent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF572999E82B00A2C0FE /* silent@2x.png */; };
+		89A4AF5B2999E82C00A2C0FE /* silent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF572999E82B00A2C0FE /* silent@2x.png */; };
 		89AC2D4529961D8400378EA0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89AC2D4429961D8400378EA0 /* WidgetKit.framework */; };
 		89AC2D4729961D8400378EA0 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89AC2D4629961D8400378EA0 /* SwiftUI.framework */; };
 		89AC2D4A29961D8400378EA0 /* WidgetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AC2D4929961D8400378EA0 /* WidgetExtension.swift */; };
@@ -105,9 +105,9 @@
 		5DCACB8F33CDC322A6C60F78 /* libPods-PhonePresets.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PhonePresets.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PhonePresets/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89A4AF4A2999834800A2C0FE /* default@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@3x.png"; sourceTree = "<group>"; };
-		89A4AF4B2999834800A2C0FE /* silent@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@2x.png"; sourceTree = "<group>"; };
 		89A4AF4C2999834800A2C0FE /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
-		89A4AF4D2999834800A2C0FE /* silent@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@3x.png"; sourceTree = "<group>"; };
+		89A4AF562999E82B00A2C0FE /* silent@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@3x.png"; sourceTree = "<group>"; };
+		89A4AF572999E82B00A2C0FE /* silent@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@2x.png"; sourceTree = "<group>"; };
 		89AC2D4329961D8400378EA0 /* WidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		89AC2D4429961D8400378EA0 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		89AC2D4629961D8400378EA0 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -258,10 +258,10 @@
 		89AC2DD12996363500378EA0 /* AppIcons */ = {
 			isa = PBXGroup;
 			children = (
+				89A4AF572999E82B00A2C0FE /* silent@2x.png */,
+				89A4AF562999E82B00A2C0FE /* silent@3x.png */,
 				89A4AF4C2999834800A2C0FE /* default@2x.png */,
 				89A4AF4A2999834800A2C0FE /* default@3x.png */,
-				89A4AF4B2999834800A2C0FE /* silent@2x.png */,
-				89A4AF4D2999834800A2C0FE /* silent@3x.png */,
 				89AC2E4D29966A9700378EA0 /* b-0.png */,
 				89AC2E4629966A9700378EA0 /* b-1-25.png */,
 				89AC2E4929966A9700378EA0 /* b-26-50.png */,
@@ -412,16 +412,16 @@
 				89AC2E5229966A9700378EA0 /* v-1-25.png in Resources */,
 				89A4AF522999834900A2C0FE /* default@2x.png in Resources */,
 				89AC2E6429966A9700378EA0 /* b-76-100.png in Resources */,
+				89A4AF5A2999E82C00A2C0FE /* silent@2x.png in Resources */,
 				89AC2E5E29966A9700378EA0 /* v-26-50.png in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				89AC2E6029966A9700378EA0 /* v-76-100.png in Resources */,
 				89AC2E5629966A9700378EA0 /* s.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				89A4AF502999834900A2C0FE /* silent@2x.png in Resources */,
+				89A4AF582999E82C00A2C0FE /* silent@3x.png in Resources */,
 				89AC2E5429966A9700378EA0 /* b-1-25.png in Resources */,
 				89AC2E6229966A9700378EA0 /* b-0.png in Resources */,
 				89AC2E5A29966A9700378EA0 /* b-26-50.png in Resources */,
-				89A4AF542999834900A2C0FE /* silent@3x.png in Resources */,
 				89A4AF4E2999834900A2C0FE /* default@3x.png in Resources */,
 				89AC2E6629966A9700378EA0 /* r.png in Resources */,
 				89AC2E5C29966A9700378EA0 /* v-51-75.png in Resources */,
@@ -438,14 +438,14 @@
 				89AC2E5B29966A9700378EA0 /* b-26-50.png in Resources */,
 				89AC2E5329966A9700378EA0 /* v-1-25.png in Resources */,
 				89AC2E6529966A9700378EA0 /* b-76-100.png in Resources */,
+				89A4AF5B2999E82C00A2C0FE /* silent@2x.png in Resources */,
 				89AC2E6729966A9700378EA0 /* r.png in Resources */,
 				89AC2E5F29966A9700378EA0 /* v-26-50.png in Resources */,
 				89A4AF4F2999834900A2C0FE /* default@3x.png in Resources */,
 				89AC2E6129966A9700378EA0 /* v-76-100.png in Resources */,
-				89A4AF552999834900A2C0FE /* silent@3x.png in Resources */,
+				89A4AF592999E82C00A2C0FE /* silent@3x.png in Resources */,
 				89AC2E5529966A9700378EA0 /* b-1-25.png in Resources */,
 				89AC2E5729966A9700378EA0 /* s.png in Resources */,
-				89A4AF512999834900A2C0FE /* silent@2x.png in Resources */,
 				89AC2D4D29961D8500378EA0 /* Assets.xcassets in Resources */,
 				89AC2E5929966A9700378EA0 /* b-51-75.png in Resources */,
 				89AC2E5129966A9700378EA0 /* v-0.png in Resources */,
@@ -711,7 +711,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PhonePresets/PhonePresets.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3J4D92SX4J;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PhonePresets/Info.plist;
@@ -721,7 +721,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -748,7 +748,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = PhonePresets/PhonePresets.entitlements;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 3J4D92SX4J;
 				INFOPLIST_FILE = PhonePresets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Phone Presets";
@@ -757,7 +757,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

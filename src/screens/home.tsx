@@ -125,7 +125,7 @@ const HomeScreen = ({ navigation }: any) => {
 
   const loadCurrentSettings = (type: string, value: number) => {
     if (type === AppConstants.TYPE_BRIGHTNESS) {
-      setDeviceBrightness(value);
+      setDeviceBrightness(Number(value.toFixed(2)));
       setWidgetData((currentState: any) => {
         const dataForWidget = {
           ...currentState,
@@ -136,7 +136,7 @@ const HomeScreen = ({ navigation }: any) => {
         return dataForWidget;
       });
     } else if (type === AppConstants.TYPE_VOLUME) {
-      setDeviceVolume(value);
+      setDeviceVolume(Number(value.toFixed(2)));
       setWidgetData((currentState: any) => {
         const dataForWidget = {
           ...currentState,
@@ -218,7 +218,7 @@ const HomeScreen = ({ navigation }: any) => {
           silent={deviceSilent ? true : false}
           onBrightnessChange={(value: number) => {
             DeviceBrightness.setBrightnessLevel(value);
-            setDeviceBrightness(value);
+            setDeviceBrightness(Number(value.toFixed(2)));
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,
@@ -231,7 +231,7 @@ const HomeScreen = ({ navigation }: any) => {
           }}
           onVolumeChange={async (value: number) => {
             await VolumeManager.setVolume(value);
-            setDeviceVolume(value);
+            setDeviceVolume(Number(value.toFixed(2)));
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,
@@ -272,10 +272,10 @@ const HomeScreen = ({ navigation }: any) => {
                         const volume = Number(item.volumeValue.replace('%', '')) / 100;
 
                         DeviceBrightness.setBrightnessLevel(brightness);
-                        setDeviceBrightness(brightness);
+                        setDeviceBrightness(Number(brightness.toFixed(2)));
 
                         await VolumeManager.setVolume(volume);
-                        setDeviceVolume(volume);
+                        setDeviceVolume(Number(volume.toFixed(2)));
 
                         setWidgetData((currentState: any) => {
                           const dataForWidget = {
@@ -291,8 +291,8 @@ const HomeScreen = ({ navigation }: any) => {
                         });
                       }}
                       active={
-                        deviceBrightness === Number(Number(item.brightnessValue.replace('%', '')).toFixed(2)) / 100 &&
-                        deviceVolume === Number(Number(item.volumeValue.replace('%', '')).toFixed(2)) / 100
+                        deviceBrightness === Number(Number(item.brightnessValue.replace('%', '')).toFixed(0)) / 100 &&
+                        deviceVolume === Number(Number(item.volumeValue.replace('%', '')).toFixed(0)) / 100
                       }
                     />
                   </View>
