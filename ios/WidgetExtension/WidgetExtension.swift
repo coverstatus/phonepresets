@@ -59,7 +59,7 @@ struct Provider: IntentTimelineProvider {
   struct MyWidgetEntryView : View {
     var entry: Provider.Entry;
     var body: some View {
-      ZStack {
+      ZStack() {
         Color(red: 29/255, green: 22/255, blue: 41/255).ignoresSafeArea()
           HStack(spacing: 8) {
             VStack() {
@@ -74,15 +74,9 @@ struct Provider: IntentTimelineProvider {
               Text(entry.volumeValue)
                 .foregroundColor(.white)
             }
-//            HStack() {
-//              Image(uiImage: UIImage(named: entry.silentIcon)!).resizable()
-//                .frame(width: 26.0, height: 26.0).padding(5).background(Color(red: 42/255, green: 32/255, blue: 59/255)).cornerRadius(8)
-//              Text(entry.silentValue).frame(width: 80, alignment: .leading)
-//                .foregroundColor(.white)
-//            }
-          }.scaledToFit()
-      }.overlay(entry.silentIcon == "s" ? Image(uiImage: UIImage(named: entry.silentIcon)!).resizable().padding(10)
-        .frame(width: 44.0, height: 44.0): nil, alignment: .bottom)
+          }.scaledToFit().padding(EdgeInsets(top: entry.silentIcon == "s" ? -32 : 0, leading: 0, bottom: 0, trailing: 0))
+      }.overlay(entry.silentIcon == "s" ? Image(uiImage: UIImage(named: entry.silentIcon)!).resizable().padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0))
+        .frame(width: 32.0, height: 48.0): nil, alignment: .bottom)
     }
   }
 
