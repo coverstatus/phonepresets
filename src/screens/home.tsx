@@ -254,6 +254,8 @@ const HomeScreen = ({ navigation }: any) => {
           onBrightnessChange={(value: number) => {
             DeviceBrightness.setBrightnessLevel(value);
             setDeviceBrightness(Number(value.toFixed(2)));
+          }}
+          onBrightnessChangeComplete={(value: number) => {
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,
@@ -267,6 +269,8 @@ const HomeScreen = ({ navigation }: any) => {
           onVolumeChange={(value: number) => {
             VolumeManager.setVolume(value, { showUI: false }).then(() => {});
             setDeviceVolume(Number(value.toFixed(2)));
+          }}
+          onVolumeChangeComplete={(value: number) => {
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,

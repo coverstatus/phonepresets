@@ -26,7 +26,6 @@
 		89A4AF6B299A308D00A2C0FE /* silent@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF68299A308D00A2C0FE /* silent@2x.png */; };
 		89A4AF6C299A308D00A2C0FE /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF69299A308D00A2C0FE /* silent@3x.png */; };
 		89A4AF6D299A308D00A2C0FE /* silent@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF69299A308D00A2C0FE /* silent@3x.png */; };
-		89A4AF6F299A373E00A2C0FE /* MuteChecker.caf in Resources */ = {isa = PBXBuildFile; fileRef = 89A4AF6E299A373D00A2C0FE /* MuteChecker.caf */; };
 		89AC2D4529961D8400378EA0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89AC2D4429961D8400378EA0 /* WidgetKit.framework */; };
 		89AC2D4729961D8400378EA0 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89AC2D4629961D8400378EA0 /* SwiftUI.framework */; };
 		89AC2D4A29961D8400378EA0 /* WidgetExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AC2D4929961D8400378EA0 /* WidgetExtension.swift */; };
@@ -111,7 +110,6 @@
 		89A4AF63299A2D3D00A2C0FE /* r.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = r.png; sourceTree = "<group>"; };
 		89A4AF68299A308D00A2C0FE /* silent@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@2x.png"; sourceTree = "<group>"; };
 		89A4AF69299A308D00A2C0FE /* silent@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "silent@3x.png"; sourceTree = "<group>"; };
-		89A4AF6E299A373D00A2C0FE /* MuteChecker.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MuteChecker.caf; path = "../node_modules/react-native-is-muted/ios/MuteChecker.caf"; sourceTree = "<group>"; };
 		89AC2D4329961D8400378EA0 /* WidgetExtensionExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetExtensionExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		89AC2D4429961D8400378EA0 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		89AC2D4629961D8400378EA0 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -220,7 +218,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				89A4AF6E299A373D00A2C0FE /* MuteChecker.caf */,
 				89AC2D5C29962CA600378EA0 /* WidgetExtensionExtension.entitlements */,
 				13B07FAE1A68108700A75B9A /* PhonePresets */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -410,7 +407,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89A4AF6F299A373E00A2C0FE /* MuteChecker.caf in Resources */,
 				89AC2E5829966A9700378EA0 /* b-51-75.png in Resources */,
 				89AC2E5029966A9700378EA0 /* v-0.png in Resources */,
 				89AC2E5229966A9700378EA0 /* v-1-25.png in Resources */,

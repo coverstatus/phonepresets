@@ -11,7 +11,17 @@ import Slider from '@react-native-community/slider';
 import AppButton from './buttons/app-button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeChange, silent, style, onSave }: any) => {
+const AppHeaderControls = ({
+  brightness,
+  onBrightnessChange,
+  onBrightnessChangeComplete,
+  volume,
+  onVolumeChange,
+  onVolumeChangeComplete,
+  silent,
+  style,
+  onSave,
+}: any) => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
@@ -55,6 +65,10 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
             onValueChange={(value: number) => {
               onBrightnessChange(value);
             }}
+            onSlidingComplete={(value: number) => {
+              onBrightnessChangeComplete(value);
+            }}
+            step={0.01}
           />
           {/* <View
             style={{
@@ -94,6 +108,10 @@ const AppHeaderControls = ({ brightness, onBrightnessChange, volume, onVolumeCha
             onValueChange={(value: number) => {
               onVolumeChange(value);
             }}
+            onSlidingComplete={(value: number) => {
+              onVolumeChangeComplete(value);
+            }}
+            step={0.01}
           />
           {/* <View
             style={{
