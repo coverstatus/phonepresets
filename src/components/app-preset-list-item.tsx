@@ -10,13 +10,10 @@ import AppText from './labels/app-text';
 import { ProgressBar } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const AppPresetListItem = ({
-  active = false,
-  presetItem,
-  style,
-  onPress,
-  isDarkMode = useColorScheme() === 'dark',
-}: any) => {
+const AppPresetListItem = ({ active = false, presetItem, style, onPress, onLongPress }: any) => {
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
+
   return (
     <Surface
       style={{
@@ -29,6 +26,7 @@ const AppPresetListItem = ({
       }}>
       <TouchableRipple
         onPress={onPress}
+        onLongPress={onLongPress}
         borderless={true}
         rippleColor={isDarkMode ? AppColors.dark.ripple : AppColors.light.ripple}
         style={{

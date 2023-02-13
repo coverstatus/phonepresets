@@ -12,7 +12,6 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 // SCREENS
 import HomeScreen from './screens/home';
 import AboutScreen from './screens/about';
-import PurchaseScreen from './screens/purchase';
 import SettingsScreen from './screens/settings';
 
 // COMMON
@@ -44,93 +43,6 @@ const App = () => {
     SystemNavigationBar.setNavigationColor(AppColors.primary);
   }, []);
 
-  useEffect(() => {
-    // (async () => {
-    //   try {
-    //     CommonService.showLoader(setState);
-    //     await initConnection();
-    //     setState((currentState: any) => {
-    //       return { ...currentState, connected: true };
-    //     });
-    //     if (!CommonService.isIos()) {
-    //       await flushFailedPurchasesCachedAsPendingAndroid();
-    //     } else {
-    //       /**
-    //        * WARNING This line should not be included in production code
-    //        * This call will call finishTransaction in all pending purchases
-    //        * on every launch, effectively consuming purchases that you might
-    //        * not have verified the receipt or given the consumer their product
-    //        *
-    //        * TL;DR you will no longer receive any updates from Apple on
-    //        * every launch for pending purchases
-    //        */
-    //       if (!CommonService.isProduction()) {
-    //         await clearTransactionIOS();
-    //       }
-    //     }
-    //     CommonService.checkPurchases(state, setState);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // })();
-
-    // const purchaseUpdateSubscription: any = purchaseUpdatedListener(async purchase => {
-    //   console.log('purchaseUpdatedListener');
-    //   // console.log(JSON.stringify(purchase));
-    //   if (CommonService.isValidPurchase(purchase)) {
-    //     try {
-    //       CommonService.showLoader(setState);
-    //       console.log('running acknowledgeResult');
-    //       const acknowledgeResult = await finishTransaction({ purchase });
-    //       console.log('finishTransaction acknowledgeResult', acknowledgeResult);
-    //       if (acknowledgeResult) {
-    //         setState((currentState: any) => {
-    //           return { ...currentState, subscribed: true };
-    //         });
-    //         await StorageService.setData(AppConstants.STORAGE_KEY_IS_SUBSCRIBED, true);
-    //       } else {
-    //         setState((currentState: any) => {
-    //           return { ...currentState, subscribed: false };
-    //         });
-    //         await StorageService.setData(AppConstants.STORAGE_KEY_IS_SUBSCRIBED, false);
-    //       }
-    //       CommonService.hideLoader(setState);
-    //     } catch (error) {
-    //       setState((currentState: any) => {
-    //         return { ...currentState, subscribed: false };
-    //       });
-    //       await StorageService.setData(AppConstants.STORAGE_KEY_IS_SUBSCRIBED, false);
-    //       CommonService.hideLoader(setState);
-    //       CommonService.showAlertMessage(setState, 'error', 'Failed to finish transaction');
-    //       console.log('finishTransaction error');
-    //       console.log(error);
-    //     }
-    //   } else {
-    //     setState((currentState: any) => {
-    //       return { ...currentState, subscribed: false };
-    //     });
-    //     await StorageService.setData(AppConstants.STORAGE_KEY_IS_SUBSCRIBED, false);
-    //   }
-    // });
-
-    // const purchaseErrorSubscription: any = purchaseErrorListener(error => {
-    //   CommonService.hideLoader(setState);
-    //   CommonService.showAlertMessage(setState, 'error', 'Error in completing purchase');
-    //   console.log('purchaseErrorListener error');
-    //   console.log(error);
-    // });
-
-    return () => {
-      // if (purchaseUpdateSubscription) {
-      //   purchaseUpdateSubscription.remove();
-      // }
-      // if (purchaseErrorSubscription) {
-      //   purchaseErrorSubscription.remove();
-      // }
-      // endConnection();
-    };
-  }, []);
-
   return (
     <View style={{ flex: 1, backgroundColor: isDarkMode ? AppColors.dark.background : AppColors.light.background }}>
       <PaperProvider theme={theme}>
@@ -147,7 +59,6 @@ const App = () => {
               }}>
               <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
               <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: false }} />
-              <Stack.Screen name="Purchase" component={PurchaseScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>

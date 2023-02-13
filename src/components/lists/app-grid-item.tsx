@@ -9,7 +9,8 @@ import { AppConstants } from '../../app.constants';
 import AppText from '../labels/app-text';
 
 const AppGridItem = ({ icon, text, style, onPress }: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
 
   return (
     <Surface

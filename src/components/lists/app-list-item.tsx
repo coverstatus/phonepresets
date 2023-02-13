@@ -15,7 +15,8 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import AppSubheading from '../labels/app-subheading';
 
 const AppListItem = ({ item, style, onRemove }: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
   const [state, setState]: any = useContext(AppContext);
 
   useEffect(() => {});

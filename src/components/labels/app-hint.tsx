@@ -5,7 +5,8 @@ import { AppColors } from '../../app.styles';
 import { CommonService } from '../../services/common.service';
 
 const AppHint = (props: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
 
   return (
     <Text

@@ -4,7 +4,8 @@ import { SafeAreaView, useColorScheme } from 'react-native';
 import { AppColors } from '../../app.styles';
 
 const AppScreenContainer = (props: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
 
   return (
     <SafeAreaView

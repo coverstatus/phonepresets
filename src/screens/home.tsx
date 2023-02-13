@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { AppState, Image, NativeModules, ScrollView, TextInput, useColorScheme, View } from 'react-native';
+import { AppState, Image, NativeModules, ScrollView, TextInput, useColorScheme, Vibration, View } from 'react-native';
 import { AppContext } from '../app.context';
 import { AppColors } from '../app.styles';
 import { useFocusEffect } from '@react-navigation/native';
@@ -11,9 +11,6 @@ import AppHeading from '../components/labels/app-heading';
 import { AppConstants } from '../app.constants';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AppButton from '../components/buttons/app-button';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import CreateScreen from './create';
-import ReplyScreen from './reply';
 import { StorageService } from '../services/storage.service';
 import AppIconButton from '../components/buttons/app-icon-button';
 import { changeIcon, getIcon } from 'react-native-change-icon';
@@ -28,6 +25,7 @@ import AppPresetListItem from '../components/app-preset-list-item';
 import AppSubtext from '../components/labels/app-subtext';
 import AppDivider from '../components/others/app-divider';
 import AppHint from '../components/labels/app-hint';
+import ConfirmDialog from '../components/others/confirm-dialog';
 const SharedStorage = NativeModules.SharedStorage;
 const group = 'group.phonepresets';
 
@@ -58,7 +56,8 @@ const HomeScreen = ({ navigation }: any) => {
     silentValue: 'Ringer',
   });
 
-  const isMuted = useRef(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [currentPreset, setCurrentPreset] = useState(0);
 
   useFocusEffect(
     useCallback(() => {
@@ -218,14 +217,7 @@ const HomeScreen = ({ navigation }: any) => {
                       setSilentIconApplied(true);
                     }
                   });
-                }}
-                // imageComponent={
-                //   <Image
-                //     source={require('../assets/images/silent_icon.png')}
-                //     style={{ height: 32, width: 32, marginRight: 8, borderRadius: 4 }}
-                //   />
-                // }
-              ></AppButton>
+                }}></AppButton>
             )}
           </View>
         )}
@@ -280,6 +272,19 @@ const HomeScreen = ({ navigation }: any) => {
             setSavedPresets(saved);
           }}
         />
+
+        <ConfirmDialog
+          title="Confirm Deletion"
+          description={'Are you sure you want to delete this preset?'}
+          onConfirm={async () => {
+            await CommonService.removePreset(currentPreset);
+            const saved = await CommonService.getPresets();
+            setSavedPresets(saved);
+          }}
+          visible={confirmVisible}
+          setVisible={setConfirmVisible}
+        />
+
         <AppHint style={{ paddingHorizontal: 16, marginTop: 16, marginBottom: 12, marginLeft: 2 }}>
           SAVED PRESETS ({savedPresets?.length || 0})
         </AppHint>
@@ -313,6 +318,11 @@ const HomeScreen = ({ navigation }: any) => {
                           sendDataToWidget(dataForWidget);
                           return dataForWidget;
                         });
+                      }}
+                      onLongPress={() => {
+                        Vibration.vibrate(100);
+                        setCurrentPreset(item.id);
+                        setConfirmVisible(true);
                       }}
                       active={
                         deviceBrightness === Number(Number(item.brightnessValue.replace('%', '')).toFixed(0)) / 100 &&

@@ -22,7 +22,8 @@ const AppHeaderControls = ({
   style,
   onSave,
 }: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
 
   return (
     <View

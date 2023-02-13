@@ -4,7 +4,8 @@ import { View, useColorScheme } from 'react-native';
 import { AppColors } from '../../app.styles';
 
 const AppCardContainer = (props: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
 
   return (
     <View

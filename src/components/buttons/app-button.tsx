@@ -22,7 +22,8 @@ const AppButton = ({
   imageComponent,
   buttonBackgroundColor,
 }: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
 
   const getBackgroundColor = () => {
     switch (mode) {

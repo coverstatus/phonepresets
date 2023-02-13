@@ -5,7 +5,8 @@ import { AppColors } from '../../app.styles';
 import { CommonService } from '../../services/common.service';
 
 const AppDivider = ({ height, marginVertical, style }: any) => {
-  const isDarkMode = useColorScheme() === 'dark';
+  // const isDarkMode = useColorScheme() === 'dark';
+  const isDarkMode = true;
 
   return (
     <View
