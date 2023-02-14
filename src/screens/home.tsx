@@ -45,9 +45,13 @@ const HomeScreen = ({ navigation }: any) => {
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-  const [deviceBrightness, setDeviceBrightness] = useState(0);
-  const [deviceVolume, setDeviceVolume] = useState(0);
-  const [deviceSilent, setDeviceSilent] = useState<boolean>(false);
+  const [initialBrightness, setInitialBrightness] = useState(0);
+  const [currentBrightness, setCurrentBrightness] = useState(0);
+
+  const [initialVolume, setInitialVolume] = useState(0);
+  const [currentVolume, setCurrentVolume] = useState(0);
+
+  const [currentSilent, setCurrentSilent] = useState<boolean>(false);
   const [widgetData, setWidgetData] = useState({
     brightnessIcon: 'b-76-100',
     brightnessValue: '100%',
@@ -60,8 +64,10 @@ const HomeScreen = ({ navigation }: any) => {
   const [autochangeIcon, setAutochangeIcon] = useState(false);
   const [silentIconApplied, setSilentIconApplied] = useState(false);
   const [savedPresets, setSavedPresets] = useState([]);
-  const [confirmVisible, setConfirmVisible] = useState(false);
   const [currentPreset, setCurrentPreset] = useState(0);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+
+  const isVolumeChangingViaSlider = useRef(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -79,7 +85,7 @@ const HomeScreen = ({ navigation }: any) => {
     });
 
     const volumeListener = VolumeManager.addVolumeListener(result => {
-      loadCurrentSettings(AppConstants.TYPE_VOLUME, result.volume);
+      onVolumeChange(Number(result.volume.toFixed(2)));
     });
 
     const silentListener = VolumeManager.addSilentListener(async status => {
@@ -93,8 +99,68 @@ const HomeScreen = ({ navigation }: any) => {
     };
   }, []);
 
+  const onFocus = async () => {
+    const brightness = Number((await DeviceBrightness.getBrightnessLevel()).toFixed(2));
+    setInitialBrightness(brightness);
+    setCurrentBrightness(brightness);
+
+    const volume = Number(((await VolumeManager.getVolume('music')) as number).toFixed(2));
+    setInitialVolume(volume);
+    setCurrentVolume(volume);
+
+    setWidgetData((currentState: any) => {
+      const dataForWidget = {
+        ...currentState,
+        brightnessIcon: 'b' + CommonService.getIconNameSuffix(Number((brightness * 100).toFixed(0))),
+        brightnessValue: (brightness * 100).toFixed(0) + '%',
+        volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((volume * 100).toFixed(0))),
+        volumeValue: (volume * 100).toFixed(0) + '%',
+      };
+      sendDataToWidget(dataForWidget);
+      return dataForWidget;
+    });
+
+    const saved = await CommonService.getPresets();
+    setSavedPresets(saved);
+
+    const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
+    setAutochangeIcon(isAutochangeIconEnabled);
+    getIcon().then((response: any) => {
+      if (response === 'silent') {
+        setSilentIconApplied(true);
+      } else {
+        setSilentIconApplied(false);
+      }
+    });
+  };
+
+  const onVolumeChange = (value: number) => {
+    if (isVolumeChangingViaSlider.current === false) {
+      setInitialVolume(value);
+      setCurrentVolume(value);
+    }
+    setWidgetData((currentState: any) => {
+      const dataForWidget = {
+        ...currentState,
+        volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
+        volumeValue: (value * 100).toFixed(0) + '%',
+      };
+      sendDataToWidget(dataForWidget);
+      return dataForWidget;
+    });
+  };
+
   const onSilentSwitchChange = async (value: boolean) => {
-    loadCurrentSettings(AppConstants.TYPE_SILENT, value ? 1 : 0);
+    setCurrentSilent(value);
+    setWidgetData((currentState: any) => {
+      const dataForWidget = {
+        ...currentState,
+        silentIcon: value ? 's' : 'r',
+        silentValue: value ? 'Silent' : 'Ringer',
+      };
+      sendDataToWidget(dataForWidget);
+      return dataForWidget;
+    });
     const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
     setAutochangeIcon(isAutochangeIconEnabled);
     if (isAutochangeIconEnabled) {
@@ -116,62 +182,6 @@ const HomeScreen = ({ navigation }: any) => {
     }
   };
 
-  const onFocus = async () => {
-    const brightness = await DeviceBrightness.getBrightnessLevel();
-    loadCurrentSettings(AppConstants.TYPE_BRIGHTNESS, brightness);
-    const volume = (await VolumeManager.getVolume('music')) as number;
-    loadCurrentSettings(AppConstants.TYPE_VOLUME, volume);
-    const saved = await CommonService.getPresets();
-    setSavedPresets(saved);
-    const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
-    setAutochangeIcon(isAutochangeIconEnabled);
-
-    getIcon().then((response: any) => {
-      if (response === 'silent') {
-        setSilentIconApplied(true);
-      } else {
-        setSilentIconApplied(false);
-      }
-    });
-  };
-
-  const loadCurrentSettings = (type: string, value: number) => {
-    if (type === AppConstants.TYPE_BRIGHTNESS) {
-      setDeviceBrightness(Number(value.toFixed(2)));
-      setWidgetData((currentState: any) => {
-        const dataForWidget = {
-          ...currentState,
-          brightnessIcon: 'b' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
-          brightnessValue: (value * 100).toFixed(0) + '%',
-        };
-        sendDataToWidget(dataForWidget);
-        return dataForWidget;
-      });
-    } else if (type === AppConstants.TYPE_VOLUME) {
-      setDeviceVolume(Number(value.toFixed(2)));
-      setWidgetData((currentState: any) => {
-        const dataForWidget = {
-          ...currentState,
-          volumeIcon: 'v' + CommonService.getIconNameSuffix(Number((value * 100).toFixed(0))),
-          volumeValue: (value * 100).toFixed(0) + '%',
-        };
-        sendDataToWidget(dataForWidget);
-        return dataForWidget;
-      });
-    } else if (type === AppConstants.TYPE_SILENT) {
-      setDeviceSilent(value ? true : false);
-      setWidgetData((currentState: any) => {
-        const dataForWidget = {
-          ...currentState,
-          silentIcon: value ? 's' : 'r',
-          silentValue: value ? 'Silent' : 'Ringer',
-        };
-        sendDataToWidget(dataForWidget);
-        return dataForWidget;
-      });
-    }
-  };
-
   const sendDataToWidget = async (data: any) => {
     try {
       if (CommonService.isIos()) {
@@ -188,7 +198,7 @@ const HomeScreen = ({ navigation }: any) => {
     <AppScreenContainer>
       <ScreenHeader navigation={navigation} />
       <View style={{ flex: 1, flexGrow: 1 }}>
-        {deviceSilent && (
+        {currentSilent && (
           <View
             style={{
               flexDirection: 'row',
@@ -229,14 +239,13 @@ const HomeScreen = ({ navigation }: any) => {
           CURRENT SETTINGS
         </AppHint>
         <AppHeaderControls
-          initialBrightness={deviceBrightness}
-          initialVolume={deviceVolume}
-          silent={deviceSilent ? true : false}
+          initialBrightness={initialBrightness}
+          initialVolume={initialVolume}
           onBrightnessChange={async (value: number) => {
             DeviceBrightness.setBrightnessLevel(value);
-            setDeviceBrightness(Number(value.toFixed(2)));
           }}
           onBrightnessChangeComplete={(value: number) => {
+            setCurrentBrightness(value);
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,
@@ -249,9 +258,13 @@ const HomeScreen = ({ navigation }: any) => {
           }}
           onVolumeChange={async (value: number) => {
             VolumeManager.setVolume(value);
-            setDeviceVolume(Number(value.toFixed(2)));
+          }}
+          onVolumeChangeStart={() => {
+            isVolumeChangingViaSlider.current = true;
           }}
           onVolumeChangeComplete={(value: number) => {
+            isVolumeChangingViaSlider.current = false;
+            setCurrentVolume(value);
             setWidgetData((currentState: any) => {
               const dataForWidget = {
                 ...currentState,
@@ -271,7 +284,6 @@ const HomeScreen = ({ navigation }: any) => {
               widgetData.silentIcon,
               widgetData.silentValue,
             );
-            console.log(widgetData);
             const saved = await CommonService.getPresets();
             setSavedPresets(saved);
           }}
@@ -297,7 +309,7 @@ const HomeScreen = ({ navigation }: any) => {
             <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
               <View style={{ flexDirection: 'column' }}>
                 {savedPresets.map((item: any, index: number) => (
-                  <View key={item.id}>
+                  <View key={item.id} style={{ flexDirection: 'column' }}>
                     <AppPresetListItem
                       presetItem={item}
                       onPress={async () => {
@@ -305,10 +317,12 @@ const HomeScreen = ({ navigation }: any) => {
                         const volume = Number(item.volumeValue.replace('%', '')) / 100;
 
                         await DeviceBrightness.setBrightnessLevel(brightness);
-                        setDeviceBrightness(Number(brightness.toFixed(2)));
+                        setInitialBrightness(brightness);
+                        setCurrentBrightness(brightness);
 
                         await VolumeManager.setVolume(volume);
-                        setDeviceVolume(Number(volume.toFixed(2)));
+                        setInitialVolume(volume);
+                        setCurrentVolume(volume);
 
                         setWidgetData((currentState: any) => {
                           const dataForWidget = {
@@ -329,8 +343,8 @@ const HomeScreen = ({ navigation }: any) => {
                         setConfirmVisible(true);
                       }}
                       active={
-                        deviceBrightness === Number(Number(item.brightnessValue.replace('%', '')).toFixed(0)) / 100 &&
-                        deviceVolume === Number(Number(item.volumeValue.replace('%', '')).toFixed(0)) / 100
+                        currentBrightness * 100 === Number(Number(item.brightnessValue.replace('%', '')).toFixed(0)) &&
+                        currentVolume * 100 === Number(Number(item.volumeValue.replace('%', '')).toFixed(0))
                       }
                     />
                   </View>

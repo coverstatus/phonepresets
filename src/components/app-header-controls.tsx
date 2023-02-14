@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 import { ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { AppColors } from '../app.styles';
@@ -18,15 +18,23 @@ const AppHeaderControls = ({
   initialVolume,
   onVolumeChange,
   onVolumeChangeComplete,
-  silent,
+  onVolumeChangeStart,
   style,
   onSave,
 }: any) => {
   // const isDarkMode = useColorScheme() === 'dark';
   const isDarkMode = true;
 
-  const [brightness, setBrightness] = useState(initialBrightness);
-  const [volume, setVolume] = useState(initialVolume);
+  const [currentBrightness, setCurrentBrightness] = useState(0);
+  const [currentVolume, setCurrentVolume] = useState(0);
+
+  useEffect(() => {
+    setCurrentBrightness(initialBrightness);
+  }, [initialBrightness]);
+
+  useEffect(() => {
+    setCurrentVolume(initialVolume);
+  }, [initialVolume]);
 
   return (
     <View
@@ -59,23 +67,26 @@ const AppHeaderControls = ({
             marginBottom: 2,
           }}>
           <Image
-            source={CommonService.getImage('b' + CommonService.getIconNameSuffix(brightness))}
+            source={CommonService.getImage('b' + CommonService.getIconNameSuffix(currentBrightness * 100))}
             style={{ height: 32, width: 32, marginRight: 8, marginLeft: -4 }}
           />
-          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{(brightness * 100).toFixed(0)}%</AppText>
+          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>
+            {(currentBrightness * 100).toFixed(0)}%
+          </AppText>
           <Slider
             style={{ flex: 1 }}
-            value={brightness}
+            value={currentBrightness}
             minimumTrackTintColor={AppColors.accent}
             onValueChange={(value: number) => {
-              setBrightness(value);
+              value = Number(value.toFixed(2));
+              setCurrentBrightness(value);
               onBrightnessChange(value);
             }}
             onSlidingComplete={(value: number) => {
+              value = Number(value.toFixed(2));
               onBrightnessChangeComplete(value);
-              onBrightnessChange(value);
             }}
-            step={0.01}
+            step={0.05}
           />
         </View>
         <View
@@ -91,23 +102,27 @@ const AppHeaderControls = ({
             borderBottomRightRadius: 8,
           }}>
           <Image
-            source={CommonService.getImage('v' + CommonService.getIconNameSuffix(volume))}
+            source={CommonService.getImage('v' + CommonService.getIconNameSuffix(currentVolume * 100))}
             style={{ height: 32, width: 32, marginRight: 8, marginLeft: -4 }}
           />
-          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{(volume * 100).toFixed(0)}%</AppText>
+          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{(currentVolume * 100).toFixed(0)}%</AppText>
           <Slider
             style={{ flex: 1 }}
-            value={volume}
+            value={currentVolume}
             minimumTrackTintColor={AppColors.accent}
             onValueChange={(value: number) => {
+              value = Number(value.toFixed(2));
+              setCurrentVolume(value);
               onVolumeChange(value);
-              setVolume(value);
+            }}
+            onSlidingStart={() => {
+              onVolumeChangeStart();
             }}
             onSlidingComplete={(value: number) => {
+              value = Number(value.toFixed(2));
               onVolumeChangeComplete(value);
-              setVolume(value);
             }}
-            step={0.01}
+            step={0.05}
           />
         </View>
         <View
