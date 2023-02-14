@@ -26,13 +26,18 @@ import AppSubtext from '../components/labels/app-subtext';
 import AppDivider from '../components/others/app-divider';
 import AppHint from '../components/labels/app-hint';
 import ConfirmDialog from '../components/others/confirm-dialog';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
 const SharedStorage = NativeModules.SharedStorage;
 const group = 'group.phonepresets';
 
 VolumeManager.showNativeVolumeUI({ enabled: false });
 VolumeManager.setNativeSilenceCheckInterval(1);
-VolumeManager.enable(false, true);
-VolumeManager.setActive(false);
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 const HomeScreen = ({ navigation }: any) => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -43,10 +48,6 @@ const HomeScreen = ({ navigation }: any) => {
   const [deviceBrightness, setDeviceBrightness] = useState(0);
   const [deviceVolume, setDeviceVolume] = useState(0);
   const [deviceSilent, setDeviceSilent] = useState<boolean>(false);
-
-  const [autochangeIcon, setAutochangeIcon] = useState(false);
-  const [silentIconApplied, setSilentIconApplied] = useState(false);
-  const [savedPresets, setSavedPresets] = useState([]);
   const [widgetData, setWidgetData] = useState({
     brightnessIcon: 'b-76-100',
     brightnessValue: '100%',
@@ -56,6 +57,9 @@ const HomeScreen = ({ navigation }: any) => {
     silentValue: 'Ringer',
   });
 
+  const [autochangeIcon, setAutochangeIcon] = useState(false);
+  const [silentIconApplied, setSilentIconApplied] = useState(false);
+  const [savedPresets, setSavedPresets] = useState([]);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [currentPreset, setCurrentPreset] = useState(0);
 
@@ -64,29 +68,6 @@ const HomeScreen = ({ navigation }: any) => {
       onFocus();
     }, []),
   );
-
-  const onSilentSwitchChange = async (value: boolean) => {
-    loadCurrentSettings(AppConstants.TYPE_SILENT, value ? 1 : 0);
-    const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
-    setAutochangeIcon(isAutochangeIconEnabled);
-    if (isAutochangeIconEnabled) {
-      if (value) {
-        getIcon().then((response: any) => {
-          if (response !== 'silent') {
-            changeIcon('silent');
-            setSilentIconApplied(true);
-          }
-        });
-      } else {
-        getIcon().then((response: any) => {
-          if (response !== 'default') {
-            changeIcon('default');
-            setSilentIconApplied(false);
-          }
-        });
-      }
-    }
-  };
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', nextAppState => {
@@ -111,6 +92,29 @@ const HomeScreen = ({ navigation }: any) => {
       subscription.remove();
     };
   }, []);
+
+  const onSilentSwitchChange = async (value: boolean) => {
+    loadCurrentSettings(AppConstants.TYPE_SILENT, value ? 1 : 0);
+    const isAutochangeIconEnabled = (await StorageService.getData(AppConstants.STORAGE_KEY_AUTOCHANGE_ICON)) || false;
+    setAutochangeIcon(isAutochangeIconEnabled);
+    if (isAutochangeIconEnabled) {
+      if (value) {
+        getIcon().then((response: any) => {
+          if (response !== 'silent') {
+            changeIcon('silent');
+            setSilentIconApplied(true);
+          }
+        });
+      } else {
+        getIcon().then((response: any) => {
+          if (response !== 'default') {
+            changeIcon('default');
+            setSilentIconApplied(false);
+          }
+        });
+      }
+    }
+  };
 
   const onFocus = async () => {
     const brightness = await DeviceBrightness.getBrightnessLevel();
@@ -225,10 +229,10 @@ const HomeScreen = ({ navigation }: any) => {
           CURRENT SETTINGS
         </AppHint>
         <AppHeaderControls
-          brightness={Number((deviceBrightness * 100).toFixed(0))}
-          volume={Number((deviceVolume * 100).toFixed(0))}
+          initialBrightness={deviceBrightness}
+          initialVolume={deviceVolume}
           silent={deviceSilent ? true : false}
-          onBrightnessChange={(value: number) => {
+          onBrightnessChange={async (value: number) => {
             DeviceBrightness.setBrightnessLevel(value);
             setDeviceBrightness(Number(value.toFixed(2)));
           }}
@@ -243,8 +247,8 @@ const HomeScreen = ({ navigation }: any) => {
               return dataForWidget;
             });
           }}
-          onVolumeChange={(value: number) => {
-            VolumeManager.setVolume(value, { showUI: false }).then(() => {});
+          onVolumeChange={async (value: number) => {
+            VolumeManager.setVolume(value);
             setDeviceVolume(Number(value.toFixed(2)));
           }}
           onVolumeChangeComplete={(value: number) => {
@@ -300,10 +304,10 @@ const HomeScreen = ({ navigation }: any) => {
                         const brightness = Number(item.brightnessValue.replace('%', '')) / 100;
                         const volume = Number(item.volumeValue.replace('%', '')) / 100;
 
-                        DeviceBrightness.setBrightnessLevel(brightness);
+                        await DeviceBrightness.setBrightnessLevel(brightness);
                         setDeviceBrightness(Number(brightness.toFixed(2)));
 
-                        VolumeManager.setVolume(volume, { showUI: false }).then(() => {});
+                        await VolumeManager.setVolume(volume);
                         setDeviceVolume(Number(volume.toFixed(2)));
 
                         setWidgetData((currentState: any) => {
@@ -320,7 +324,7 @@ const HomeScreen = ({ navigation }: any) => {
                         });
                       }}
                       onLongPress={() => {
-                        Vibration.vibrate(100);
+                        ReactNativeHapticFeedback.trigger('impactMedium', options);
                         setCurrentPreset(item.id);
                         setConfirmVisible(true);
                       }}
@@ -362,7 +366,6 @@ const ScreenHeader = ({ navigation }: any) => {
         paddingBottom: 8,
         backgroundColor: AppColors.primary,
       }}>
-      {/* <Image source={require('../assets/images/logo.png')} style={{ height: 42, width: 42, marginRight: 8 }} /> */}
       <AppHeading style={{ color: AppColors.dark.text, marginLeft: 2 }}>Phone Presets</AppHeading>
       <View style={{ flexGrow: 1 }} />
       <AppIconButton

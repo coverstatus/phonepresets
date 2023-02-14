@@ -11,7 +11,6 @@ import SystemNavigationBar from 'react-native-system-navigation-bar';
 
 // SCREENS
 import HomeScreen from './screens/home';
-import AboutScreen from './screens/about';
 import SettingsScreen from './screens/settings';
 
 // COMMON
@@ -58,7 +57,6 @@ const App = () => {
                 headerShadowVisible: false,
               }}>
               <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-              <Stack.Screen name="About" component={AboutScreen} options={{ headerShown: false }} />
               <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false }} />
             </Stack.Navigator>
           </NavigationContainer>

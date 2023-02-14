@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from 'react';
+import React, { useState } from 'react';
 import { Image } from 'react-native';
 import { ScrollView, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { AppColors } from '../app.styles';
@@ -12,10 +12,10 @@ import AppButton from './buttons/app-button';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AppHeaderControls = ({
-  brightness,
+  initialBrightness,
   onBrightnessChange,
   onBrightnessChangeComplete,
-  volume,
+  initialVolume,
   onVolumeChange,
   onVolumeChangeComplete,
   silent,
@@ -25,6 +25,9 @@ const AppHeaderControls = ({
   // const isDarkMode = useColorScheme() === 'dark';
   const isDarkMode = true;
 
+  const [brightness, setBrightness] = useState(initialBrightness);
+  const [volume, setVolume] = useState(initialVolume);
+
   return (
     <View
       style={{
@@ -33,6 +36,7 @@ const AppHeaderControls = ({
         backgroundColor: AppColors.primary,
         margin: 16,
         borderRadius: 8,
+        ...style,
       }}>
       <View
         style={{
@@ -58,32 +62,21 @@ const AppHeaderControls = ({
             source={CommonService.getImage('b' + CommonService.getIconNameSuffix(brightness))}
             style={{ height: 32, width: 32, marginRight: 8, marginLeft: -4 }}
           />
-          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{brightness}%</AppText>
+          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{(brightness * 100).toFixed(0)}%</AppText>
           <Slider
             style={{ flex: 1 }}
-            value={brightness / 100}
+            value={brightness}
             minimumTrackTintColor={AppColors.accent}
             onValueChange={(value: number) => {
+              setBrightness(value);
               onBrightnessChange(value);
             }}
             onSlidingComplete={(value: number) => {
               onBrightnessChangeComplete(value);
+              onBrightnessChange(value);
             }}
             step={0.01}
           />
-          {/* <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingLeft: 16,
-            }}>
-            <MaterialCommunityIcons
-              name={'brightness-4'}
-              color={isDarkMode ? AppColors.dark.text : 'rgba(255,255,255,0.4)'}
-              size={24}
-            />
-          </View> */}
         </View>
         <View
           style={{
@@ -101,32 +94,21 @@ const AppHeaderControls = ({
             source={CommonService.getImage('v' + CommonService.getIconNameSuffix(volume))}
             style={{ height: 32, width: 32, marginRight: 8, marginLeft: -4 }}
           />
-          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{volume}%</AppText>
+          <AppText style={{ marginRight: 8, color: AppColors.dark.text }}>{(volume * 100).toFixed(0)}%</AppText>
           <Slider
             style={{ flex: 1 }}
-            value={volume / 100}
+            value={volume}
             minimumTrackTintColor={AppColors.accent}
             onValueChange={(value: number) => {
               onVolumeChange(value);
+              setVolume(value);
             }}
             onSlidingComplete={(value: number) => {
               onVolumeChangeComplete(value);
+              setVolume(value);
             }}
             step={0.01}
           />
-          {/* <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingLeft: 16,
-            }}>
-            <MaterialCommunityIcons
-              name={silent ? 'bell-off' : 'bell-ring'}
-              color={silent ? '#e74242' : 'rgba(255,255,255,0.4)'}
-              size={24}
-            />
-          </View> */}
         </View>
         <View
           style={{
